@@ -1,14 +1,15 @@
-import tkinter as tk
-from tkinter import messagebox
-import re
-import json
-import os
-import hashlib
-from datetime import datetime
-from PIL import Image, ImageTk
+import tkinter as tk                # GUI library for application interface
+from tkinter import messagebox      # For showing pop-up messages
+import json                         # Data storage
+import os                           # File handling
+import random                       # For random motivational messages
+from PIL import Image, ImageTk      # Logo
 
-# DATABASE SETUP
-DB_FILE = "users.json"
+# INTEGRATION OF FUNCTIONALITY MODULES
+from sys_functions.task_tracker import show_task_tracker               # Task Tracker module
+from sys_functions.goal_planner import show_goal_planner               # Goal Planner module
+from sys_functions.user_profile_dashboard import show_profile_menu     # User Profile Dashboard module
+from sys_functions.registration_login_systems import *                 # Registration & Login systems
 
 # MAIN COLOUR PALETTE
 BG_MAIN = "#0f172a"        # deep navy background
@@ -19,15 +20,9 @@ TEXT = "#f1f5f9"           # off-white text for high contrast and readability
 SUBTLE = "#94a3b8"         # lighter text for subtitles and less important info
 INPUT_BG = "#020617"       # very dark background for input fields to make them stand out
 
-# ENSURE DATABASE FILE EXISTS
-if not os.path.exists(DB_FILE):
-    with open(DB_FILE, "w") as f:
-        json.dump({}, f)
-
 # UTILITY FUNCTION TO CREATE STYLED BUTTONS
 def create_button(parent, text, command, primary=True):
     bg = ACCENT if primary else BG_CARD # Primary buttons are red, secondary are card-colored
-
     btn = tk.Label(parent, text=text, bg=bg, fg="white", font=("Segoe UI", 16, "bold"), width=22, height=2, cursor="hand2")
 
     def on_enter(e): 
@@ -51,7 +46,7 @@ def create_field(parent, label, is_password=False):
     # Input wrapper to hold the entry and optional password toggle button
     # Ensures consistent spacing even when toggle is not present
     wrapper = tk.Frame(parent, bg=BG_CARD)
-    wrapper.pack(fill="x", pady=10)
+    wrapper.pack(fill="x", pady=(6, 0))
 
     entry = tk.Entry(wrapper, bg=INPUT_BG, fg=TEXT, insertbackground="white", relief="flat", font=("Segoe UI", 12), 
                      highlightbackground=TEXT, highlightthickness=1, width=45, show="*" if is_password else "")
@@ -65,56 +60,16 @@ def create_field(parent, label, is_password=False):
         tk.Button(wrapper, text="👁", command=toggle, bg="#334155", fg=TEXT, relief="flat", width=4).pack(side="right", padx=5)
 
     error = tk.Label(parent, text="", fg="#ef4444", bg=BG_CARD, font=("Arial", 8))
-    error.pack(anchor="w")
+    error.pack(anchor="w", pady=(0, 2))
 
     return entry, error # Return the entry widget and the error label for validation feedback
-
-# SECURITY FEATURE (PASSWORD HASHING)
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest() # Simple hashing for demonstration (use bcrypt/scrypt in production)
-
-# USER ACCOUNT VALIDATION
-def validate_email(email): 
-    # Simple regex for email validation
-    return re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email)
-
-def validate_password(password): 
-    # Minimum 8 characters, at least one letter and one number
-    return re.match(r"^(?=.*[A-Za-z])(?=.*\d).{8,}$", password)
-
-def validate_dob(dob):
-    # Check if DOB is in correct format and not in the future
-    try:
-        return datetime.strptime(dob, "%Y-%m-%d") <= datetime.now()
-    except:
-        return False
-
-# SAVE USER TO ACCOUNTS DATABASE
-def save_user(username, email, dob, password):
-    with open(DB_FILE, "r") as f:
-        data = json.load(f)
-
-    # Check case-insensitive duplicates
-    for existing_user in data:
-        if existing_user.lower() == username.lower():
-            return False
-
-    data[username] = { # Storing user data (password is hashed for security)
-        "username": username, # Username
-        "email": email, # Email
-        "dob": dob, # Date of Birth
-        "password": hash_password(password), # Hashed password
-        "streak": 0 # Streak (currently placeholder)
-    }
-
-    with open(DB_FILE, "w") as f: # Save updated user data back to JSON file
-        json.dump(data, f, indent=4)
-
-    return True # Return True if user was saved successfully, False if username already exists (case-insensitive)
 
 # APP CLASS
 class StudyZoneApp:
     def __init__(self, root):
+        # Initialize the main application class, set up the root window, and show the home screen
+        self.current_user = None
+        
         self.root = root
         self.root.title("StudyZone")
 
@@ -122,12 +77,47 @@ class StudyZoneApp:
         self.root.state("zoomed")
         self.root.configure(bg="#111111")
 
+        # Set up color scheme and utility functions as instance variables for easy access in other modules
+        self.BG_MAIN = BG_MAIN
+        self.BG_CARD = BG_CARD
+        self.ACCENT = ACCENT
+        self.TEXT = TEXT
+        self.create_field = create_field
+
         self.show_home()
 
     # CLEAR SCREEN
     def clear(self):
+        self.root.unbind("<Escape>")
+
         for widget in self.root.winfo_children():
             widget.destroy()
+
+    def dev_login(self):
+        # Deverloper mode for quick access without registration/login during development
+        # Will be remade into an app help guide in the future
+        username = "StudyDev"
+
+        # Load DB
+        with open(ACCOUNTDB_FILE, "r") as f:
+            data = json.load(f)
+
+        # Create account if it doesn't exist
+        if username not in data:
+            data[username] = {
+                "username": username,
+                "email": "dev@studyzone.com",
+                "dob": "2000-01-01",
+                "password": hash_password("Password123!"),
+                "streak": 0
+            }
+
+            with open(ACCOUNTDB_FILE, "w") as f:
+                json.dump(data, f, indent=4)
+
+        # Log in directly
+        self.current_user = username
+        self.show_main_menu()
 
     # HOME SCREEN
     def show_home(self):
@@ -155,140 +145,73 @@ class StudyZoneApp:
         button_frame = tk.Frame(container, bg=BG_MAIN)
         button_frame.pack(pady=100)
 
-        create_button(button_frame, "Register", self.show_register).pack(pady=10)
-        create_button(button_frame, "Log In", self.show_login, primary=False).pack(pady=20)
+        create_button(button_frame, "Register", lambda: user_registration(self)).pack(pady=10)
+        create_button(button_frame, "Log In", lambda: user_login(self)).pack(pady=20)
+        create_button(button_frame, "Developer Mode", self.dev_login, primary=False).pack(pady=10)
 
-    # REGISTER SCREEN
-    def show_register(self):
+    def show_main_menu(self):
         self.clear()
+        self.root.configure(bg=BG_MAIN)
 
-        # Registration frame, dark background
-        outer = tk.Frame(self.root, bg=BG_MAIN)
-        outer.pack(expand=True)
+        container = tk.Frame(self.root, bg=BG_MAIN)
+        container.pack(fill="both", expand=True)
 
-        frame = tk.Frame(outer, bg=BG_CARD, padx=100, pady=40)
-        frame.pack()
+        # MOTIVATIONAL MESSAGES. RANDOMLY SELECTED FROM messages.md
+        try:
+            with open("messages.md", "r", encoding="utf-8") as f:
+                # Reads lines, strips whitespace, removes empty lines
+                messages = [line.strip() for line in f if line.strip()]
+            message = random.choice(messages)
+        except FileNotFoundError:
+            # Fallback message if messages.md is missing for whatever reason
+            message = "Focus on your goals."
 
-        tk.Label(frame, text="Register", font=("Segoe UI", 26, "bold"), bg=BG_CARD, fg=TEXT).pack(pady=10)
+        tk.Label(container, text=message, font=("Segoe UI", 22, "bold"), fg=TEXT, bg=BG_MAIN).pack(pady=100)
 
-        username, err_username = create_field(frame, "Username") # Username field with error label
-        email, err_email = create_field(frame, "Email") # Email field with error label
-        dob, err_dob = create_field(frame, "Date of Birth (YYYY-MM-DD)") # DOB field with error label)
-        password, err_pass = create_field(frame, "Password", is_password=True)
+        # TOOL GRID
+        grid = tk.Frame(container, bg=BG_MAIN)
+        grid.pack(pady=0.1)
 
-        general_error = tk.Label(frame, text="", fg="red", bg=BG_CARD)
-        general_error.pack() # General error (e.g. user already exists)
+        def create_square(text, command):
+            # Function to create a clickable square for each tool in the main menu
+            square = tk.Label(grid, text=text, bg=BG_CARD, fg=TEXT, font=("Segoe UI", 14, "bold"), width=20, height=8, cursor="hand2")
 
-        # VALIDATION MECHANISM
-        def validate():
-            valid = True # Assume valid until checks fail
+            # Hover effect to change background color when mouse is over the square
+            def hover_on(e): square.config(bg="#334155")
+            def hover_off(e): square.config(bg=BG_CARD)
 
-            # USERNAME
-            if username.get().strip() == "": # Check if username is empty
-                err_username.config(text="Username required")
-                valid = False
-            elif len(username.get()) < 3: # Check if username is too short
-                err_username.config(text="Username too short")
-                valid = False
-            elif len(username.get()) > 20: # Check if username is too long
-                err_username.config(text="Username too long")
-                valid = False
-            elif not re.match(r"^[a-zA-Z0-9_]+$", username.get()): # Check if username contains invalid characters
-                err_username.config(text="Only letters, numbers, _")
-                valid = False
-            else:
-                err_username.config(text="")
+            # Bind hover and click events to the square
+            square.bind("<Enter>", hover_on)
+            square.bind("<Leave>", hover_off)
+            square.bind("<Button-1>", lambda e: command())
 
-            # EMAIL
-            if not validate_email(email.get()): # Check if email is valid
-                err_email.config(text="Invalid email")
-                valid = False
-            else:
-                err_email.config(text="")
+            return square
+        
+        def confirm_exit(event=None):
+            response = messagebox.askyesno("Exit", "Do you want to close StudyZone?")
+            if response:
+                self.root.destroy() # Self-destruct upon confirmation
 
-            # DOB
-            if not validate_dob(dob.get()): # Check if DOB is valid
-                err_dob.config(text="Invalid DOB")
-                valid = False
-            else:
-                err_dob.config(text="")
+        self.root.bind("<Escape>", confirm_exit)
 
-            # PASSWORD
-            if not validate_password(password.get()): # Check if password is strong enough
-                err_pass.config(text="Weak password")
-                valid = False
-            else:
-                err_pass.config(text="")
+        # MAIN MENU SQUARES
+        create_square("Task Tracker", lambda: show_task_tracker(self)).grid(row=0, column=1, padx=20, pady=20)
+        create_square("Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
 
-            submit_btn.config(state="normal" if valid else "disabled")
+        # PROFILE BUTTON (BOTTOM-RIGHT CIRCLE)
+        canvas = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas.place(relx=0.97, rely=0.95, anchor="se")
 
-        for field in [username, email, dob, password]: # Bind validation to all fields on key release
-            field.bind("<KeyRelease>", lambda e: validate())
+        canvas.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas.create_text(54, 50, text="👤", fill="white", font=("Segoe UI", 30))
 
-        def submit(): 
-            # Submit function to save user data after validation
-            if not save_user(username.get(), email.get(), dob.get(), password.get()):
-                general_error.config(text="User already exists") # Check if user already exists and show error
-                return
+        def open_profile(event=None):
+            show_profile_menu(self)
 
-            messagebox.showinfo("Success", "Registered!")
-            self.show_home() # Placeholder for future updates
-
-        # Submit button starts disabled and only enables when all fields are valid
-        submit_btn = tk.Button(frame, text="Submit", state="disabled", command=submit, bg=ACCENT, fg=TEXT, width=20, height=2)
-        submit_btn.pack(pady=10)
-
-        tk.Button(frame, text="← Back", command=self.show_home, bg=BG_CARD, fg=TEXT, width=20, height=2).pack(pady=10) # Go Back button
-
-    # LOGIN SCREEN (BASIC)
-    def show_login(self):
-        self.clear()
-
-        # SAME OUTER STRUCTURE AS REGISTER
-        outer = tk.Frame(self.root, bg=BG_MAIN)
-        outer.pack(expand=True)
-
-        frame = tk.Frame(outer, bg=BG_CARD, padx=100, pady=40)
-        frame.pack()
-
-        tk.Label(frame, text="Login",
-                font=("Segoe UI", 26, "bold"),
-                bg=BG_CARD, fg=TEXT).pack(pady=10)
-
-        # INPUT FIELDS
-        username, _ = create_field(frame, "Username")
-        password, _ = create_field(frame, "Password", is_password=True)
-
-        general_error = tk.Label(frame, text="", fg="red", bg=BG_CARD)
-        general_error.pack()
-
-        # LOGIN LOGIC
-        def login():
-            with open(DB_FILE, "r") as f:
-                data = json.load(f)
-
-            input_username = username.get() # Get the input username for case-insensitive comparison
-            user = None
-
-            for existing_user in data: # Loop through existing users to find a case-insensitive match
-                if existing_user.lower() == input_username.lower():
-                    user = data[existing_user]
-                    break
-
-            if not user or user["password"] != hash_password(password.get()): 
-                # Check if user exists and password matches
-                general_error.config(text="Invalid username or password")
-                return
-
-            messagebox.showinfo("Success", f"Welcome {user['username']}!")
-
-        # BUTTONS
-        tk.Button(frame, text="Login", command=login, bg=ACCENT, fg=TEXT, width=20, height=2).pack(pady=10)
-        tk.Button(frame, text="← Back", command=self.show_home, bg=BG_CARD, fg=TEXT, width=20, height=2).pack(pady=10)
+        canvas.bind("<Button-1>", open_profile)
 
 # RUN APP
 root = tk.Tk()
 root.iconbitmap("img_assets/StudyZone.ico")
-
 app = StudyZoneApp(root)
 root.mainloop()
