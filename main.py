@@ -4,12 +4,14 @@ import json                         # Data storage
 import os                           # File handling
 import random                       # For random motivational messages
 from PIL import Image, ImageTk      # Logo
+import pygame                       # Music player + playlist system (Using Pygame since Tkinter does not support music functionality natively)
 
 # INTEGRATION OF FUNCTIONALITY MODULES
-from sys_functions.task_tracker import show_task_tracker               # Task Tracker module
-from sys_functions.goal_planner import show_goal_planner               # Goal Planner module
-from sys_functions.user_profile_dashboard import show_profile_menu     # User Profile Dashboard module
-from sys_functions.registration_login_systems import *                 # Registration & Login systems
+from system_functions.task_tracker import show_task_tracker                    # Task Tracker module
+from system_functions.goal_planner import show_goal_planner                    # Goal Planner module
+from system_functions.user_profile_dashboard import show_profile_menu          # User Profile Dashboard module
+from system_functions.registration_login_systems import *                      # Registration & Login systems
+from system_functions.music_system.music_settings import show_music_player     # Music Player module
 
 # MAIN COLOUR PALETTE
 BG_MAIN = "#0f172a"        # deep navy background
@@ -84,6 +86,17 @@ class StudyZoneApp:
         self.TEXT = TEXT
         self.create_field = create_field
 
+        # Initialize music system
+        pygame.mixer.init()
+
+        # Default music settings
+        self.current_song = "system_functions/music_system/Creo - Flow.mp3"
+        self.playlist = ["system_functions/music_system/Creo - Flow.mp3"]
+        self.is_muted = False
+        self.volume = 0.5
+
+        pygame.mixer.music.set_volume(self.volume)
+
         self.show_home()
 
     # CLEAR SCREEN
@@ -92,6 +105,20 @@ class StudyZoneApp:
 
         for widget in self.root.winfo_children():
             widget.destroy()
+
+    def play_music(self, song=None):
+        # Load and play music using Pygame mixer, with error handling for missing files
+        if song:
+            self.current_song = song
+
+        if not self.playlist: # If playlist is empty, add the default song to prevent errors
+            return
+
+        try:
+            pygame.mixer.music.load(self.current_song)
+            pygame.mixer.music.play(-1)  # loop forever
+        except:
+            print("Music file missing:", self.current_song)
 
     def dev_login(self):
         # Deverloper mode for quick access without registration/login during development
@@ -118,6 +145,7 @@ class StudyZoneApp:
         # Log in directly
         self.current_user = username
         self.show_main_menu()
+        self.play_music()
 
     # HOME SCREEN
     def show_home(self):
@@ -148,6 +176,14 @@ class StudyZoneApp:
         create_button(button_frame, "Register", lambda: user_registration(self)).pack(pady=10)
         create_button(button_frame, "Log In", lambda: user_login(self)).pack(pady=20)
         create_button(button_frame, "Developer Mode", self.dev_login, primary=False).pack(pady=10)
+
+        def confirm_exit(event=None):
+            # Exit confirmation popup when user presses Escape key in the main menu
+            response = messagebox.askyesno("Exit", "Do you want to close StudyZone?")
+            if response:
+                self.root.destroy() # Self-destruct upon confirmation
+
+        self.root.bind("<Escape>", confirm_exit)
 
     def show_main_menu(self):
         self.clear()
@@ -188,6 +224,7 @@ class StudyZoneApp:
             return square
         
         def confirm_exit(event=None):
+            # Exit confirmation popup when user presses Escape key in the main menu
             response = messagebox.askyesno("Exit", "Do you want to close StudyZone?")
             if response:
                 self.root.destroy() # Self-destruct upon confirmation
@@ -198,7 +235,7 @@ class StudyZoneApp:
         create_square("Task Tracker", lambda: show_task_tracker(self)).grid(row=0, column=1, padx=20, pady=20)
         create_square("Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
 
-        # PROFILE BUTTON (BOTTOM-RIGHT CIRCLE)
+        # USER PROFILE BUTTON
         canvas = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
         canvas.place(relx=0.97, rely=0.95, anchor="se")
 
@@ -209,6 +246,18 @@ class StudyZoneApp:
             show_profile_menu(self)
 
         canvas.bind("<Button-1>", open_profile)
+
+        # MUSIC PLAYER BUTTON
+        canvas = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas.place(relx=0.97, rely=0.83, anchor="se")
+
+        canvas.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
+
+        def open_music_player(event=None):
+            show_music_player(self)
+
+        canvas.bind("<Button-1>", open_music_player)
 
 # RUN APP
 root = tk.Tk()
