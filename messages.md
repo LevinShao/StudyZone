@@ -14,3 +14,4 @@ Don't fall for distractions.
 Success is right ahead.
 Ready to begin another session?
 Always best to start thinking ahead.
+One day you will receive what you desire.

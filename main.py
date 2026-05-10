@@ -12,6 +12,7 @@ from system_functions.goal_planner import show_goal_planner                    #
 from system_functions.user_profile_dashboard import show_profile_menu          # User Profile Dashboard module
 from system_functions.registration_login_systems import *                      # Registration & Login systems
 from system_functions.music_system.music_settings import show_music_player     # Music Player module
+from system_functions.calendar import show_calendar
 
 # MAIN COLOUR PALETTE
 BG_MAIN = "#0f172a"        # deep navy background
@@ -92,7 +93,6 @@ class StudyZoneApp:
         # Default music settings
         self.current_song = "system_functions/music_system/Creo - Flow.mp3"
         self.playlist = ["system_functions/music_system/Creo - Flow.mp3"]
-        self.is_muted = False
         self.volume = 0.5
 
         pygame.mixer.music.set_volume(self.volume)
@@ -161,6 +161,7 @@ class StudyZoneApp:
 
         logo_path = os.path.join(os.path.dirname(__file__), "img_assets/StudyZone.png")
         if os.path.exists(logo_path):
+            # Load and display the logo image at the top of the home screen
             img = Image.open(logo_path)
             img = img.resize((1000, 230))
             self.logo_img = ImageTk.PhotoImage(img)
@@ -234,30 +235,41 @@ class StudyZoneApp:
         # MAIN MENU SQUARES
         create_square("Task Tracker", lambda: show_task_tracker(self)).grid(row=0, column=1, padx=20, pady=20)
         create_square("Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
-
-        # USER PROFILE BUTTON
-        canvas = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas.place(relx=0.97, rely=0.95, anchor="se")
-
-        canvas.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas.create_text(54, 50, text="👤", fill="white", font=("Segoe UI", 30))
-
-        def open_profile(event=None):
-            show_profile_menu(self)
-
-        canvas.bind("<Button-1>", open_profile)
-
+        create_square("Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
+        
         # MUSIC PLAYER BUTTON
-        canvas = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas.place(relx=0.97, rely=0.83, anchor="se")
+        canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas1.place(relx=0.97, rely=0.83, anchor="se")
 
-        canvas.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
+        canvas1.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas1.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
 
         def open_music_player(event=None):
             show_music_player(self)
 
-        canvas.bind("<Button-1>", open_music_player)
+        hover_on = lambda e: canvas1.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
+        hover_off = lambda e: canvas1.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
+
+        canvas1.bind("<Enter>", hover_on)
+        canvas1.bind("<Leave>", hover_off)
+        canvas1.bind("<Button-1>", open_music_player)
+
+        # USER PROFILE BUTTON
+        canvas2 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas2.place(relx=0.97, rely=0.95, anchor="se")
+
+        canvas2.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas2.create_text(54, 50, text="👤", fill="white", font=("Segoe UI", 30))
+
+        def open_profile(event=None):
+            show_profile_menu(self)
+
+        hover_on = lambda e: canvas2.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
+        hover_off = lambda e: canvas2.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
+
+        canvas2.bind("<Enter>", hover_on)
+        canvas2.bind("<Leave>", hover_off)
+        canvas2.bind("<Button-1>", open_profile)
 
 # RUN APP
 root = tk.Tk()

@@ -23,8 +23,14 @@ def get_user_data(username):
     if username not in data:
         data[username] = {
             "tasks": [],
-            "goals": []
+            "goals": [],
+            "events": []
         }
+        save_data(data)
+
+    # Ensure older users get events field
+    if "events" not in data[username]:
+        data[username]["events"] = []
         save_data(data)
 
     return data[username]
