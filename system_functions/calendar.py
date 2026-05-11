@@ -75,10 +75,22 @@ def show_calendar(app, year=None, month=None):
             y += 1
         show_calendar(app, y, m)
 
+    def prev_year():
+        m = month
+        y = year - 1
+        show_calendar(app, y, m)
+
+    def next_year():
+        m = month
+        y = year + 1
+        show_calendar(app, y, m)
+
     # Header with month and year display and navigation buttons
+    tk.Button(header, text="◀◀", command=prev_year, bg=app.ACCENT, fg=app.TEXT).pack(side="left", padx=10)    
     tk.Button(header, text="◀", command=prev_month, bg=app.ACCENT, fg=app.TEXT).pack(side="left", padx=10)
     tk.Label(header, text=f"{calendar.month_name[month]} {year}", font=("Segoe UI", 16, "bold"), bg=app.BG_CARD, fg=app.TEXT).pack(side="left", padx=20)
     tk.Button(header, text="▶", command=next_month, bg=app.ACCENT, fg=app.TEXT).pack(side="left", padx=10)
+    tk.Button(header, text="▶▶", command=next_year, bg=app.ACCENT, fg=app.TEXT).pack(side="left", padx=10) 
 
     # Calendar Grid
     cal = calendar.monthcalendar(year, month)

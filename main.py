@@ -12,16 +12,9 @@ from system_functions.goal_planner import show_goal_planner                    #
 from system_functions.user_profile_dashboard import show_profile_menu          # User Profile Dashboard module
 from system_functions.registration_login_systems import *                      # Registration & Login systems
 from system_functions.music_system.music_settings import show_music_player     # Music Player module
-from system_functions.calendar import show_calendar
-
-# MAIN COLOUR PALETTE
-BG_MAIN = "#0f172a"        # deep navy background
-BG_CARD = "#1e293b"        # card background (slightly lighter navy)
-ACCENT = "#ef4444"         # red accent (buttons, highlights, etc.)
-ACCENT_HOVER = "#dc2626"   # darker red for hover state
-TEXT = "#f1f5f9"           # off-white text for high contrast and readability
-SUBTLE = "#94a3b8"         # lighter text for subtitles and less important info
-INPUT_BG = "#020617"       # very dark background for input fields to make them stand out
+from system_functions.calendar import show_calendar                            # Calendar + Reminders systems
+from system_functions.skill_training_menu import show_skill_menu               # Skill Training Menu
+from system_functions.backend.ui_helpers import *                              # Import everything from UI helpers (integration module)
 
 # UTILITY FUNCTION TO CREATE STYLED BUTTONS
 def create_button(parent, text, command, primary=True):
@@ -86,6 +79,7 @@ class StudyZoneApp:
         self.ACCENT = ACCENT
         self.TEXT = TEXT
         self.create_field = create_field
+        self.create_square = create_square
 
         # Initialize music system
         pygame.mixer.init()
@@ -208,21 +202,6 @@ class StudyZoneApp:
         # TOOL GRID
         grid = tk.Frame(container, bg=BG_MAIN)
         grid.pack(pady=0.1)
-
-        def create_square(text, command):
-            # Function to create a clickable square for each tool in the main menu
-            square = tk.Label(grid, text=text, bg=BG_CARD, fg=TEXT, font=("Segoe UI", 14, "bold"), width=20, height=8, cursor="hand2")
-
-            # Hover effect to change background color when mouse is over the square
-            def hover_on(e): square.config(bg="#334155")
-            def hover_off(e): square.config(bg=BG_CARD)
-
-            # Bind hover and click events to the square
-            square.bind("<Enter>", hover_on)
-            square.bind("<Leave>", hover_off)
-            square.bind("<Button-1>", lambda e: command())
-
-            return square
         
         def confirm_exit(event=None):
             # Exit confirmation popup when user presses Escape key in the main menu
@@ -233,9 +212,10 @@ class StudyZoneApp:
         self.root.bind("<Escape>", confirm_exit)
 
         # MAIN MENU SQUARES
-        create_square("Task Tracker", lambda: show_task_tracker(self)).grid(row=0, column=1, padx=20, pady=20)
-        create_square("Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
-        create_square("Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
+        create_square(grid, "Task Tracker", lambda: show_task_tracker(self)).grid(row=0, column=1, padx=20, pady=20)
+        create_square(grid, "Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
+        create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
+        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=4, padx=20, pady=20)
         
         # MUSIC PLAYER BUTTON
         canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
