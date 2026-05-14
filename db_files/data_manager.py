@@ -17,20 +17,42 @@ def save_data(data):
         json.dump(data, f, indent=4)
 
 def get_user_data(username):
-    # Load all data and return the specific user's data (right now, tasks and goals)
+    # Load all data and return the specific user's data
     data = load_data()
 
     if username not in data:
         data[username] = {
             "tasks": [],
             "goals": [],
-            "events": []
+            "events": [],
+            "aim_trainer": {
+                "high_score": 0,
+                "games_played": 0,
+                "best_accuracy": 0
+            }
         }
         save_data(data)
 
-    # Ensure older users get events field
-    if "events" not in data[username]:
-        data[username]["events"] = []
+    # Ensure older accounts get missing fields
+    defaults = {
+        "tasks": [],
+        "goals": [],
+        "events": [],
+        "aim_trainer": {
+            "high_score": 0,
+            "games_played": 0,
+            "best_accuracy": 0
+        }
+    }
+
+    changed = False
+
+    for key, value in defaults.items():
+        if key not in data[username]:
+            data[username][key] = value
+            changed = True
+
+    if changed:
         save_data(data)
 
     return data[username]

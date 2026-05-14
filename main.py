@@ -80,6 +80,7 @@ class StudyZoneApp:
         self.TEXT = TEXT
         self.create_field = create_field
         self.create_square = create_square
+        self.show_skill_menu = show_skill_menu
 
         # Initialize music system
         pygame.mixer.init()

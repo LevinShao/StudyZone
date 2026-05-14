@@ -2,6 +2,11 @@
     "StudyDev": {
         "tasks": [],
         "goals": [],
-        "events": []
+        "events": [],
+        "aim_trainer": {
+            "high_score": 39,
+            "games_played": 5,
+            "best_accuracy": 95
+        }
     }
 }
