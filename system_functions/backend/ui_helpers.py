@@ -32,8 +32,11 @@ def create_square(app, text, command):
     square = tk.Label(app, text=text, bg=BG_CARD, fg=TEXT, font=("Segoe UI", 14, "bold"), width=20, height=8, cursor="hand2")
 
     # Hover effect to change background color when mouse is over the square
-    def hover_on(e): square.config(bg="#334155")
-    def hover_off(e): square.config(bg=BG_CARD)
+    def hover_on(e): 
+        square.config(bg="#334155")
+
+    def hover_off(e): 
+        square.config(bg=BG_CARD)
 
     # Bind hover and click events to the square
     square.bind("<Enter>", hover_on)
@@ -47,22 +50,40 @@ def create_square(app, text, command):
 
 def bind_exit_menu(app):
     # Exit function to go back to main menu when Escape key is pressed
+    exit_btn = tk.Label(app.root, text="✖", fg="white", bg=app.ACCENT, font=("Segoe UI", 16), cursor="hand2")
+    exit_btn.place(x=30, y=30)
+
     def exit_to_menu(event=None):
         app.root.unbind("<Escape>")
         app.show_main_menu()
 
+    def hover_on(e): 
+        exit_btn.config(bg=ACCENT_HOVER)
+
+    def hover_off(e): 
+        exit_btn.config(bg=ACCENT)
+
     app.root.bind("<Escape>", exit_to_menu)
-    exit_btn = tk.Label(app.root, text="✖", fg="white", bg=app.ACCENT, font=("Segoe UI", 16), cursor="hand2")
-    exit_btn.place(x=30, y=30)
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", lambda e: app.show_main_menu())
 
 def bind_exit_home(app):
     # Exit function to go back to home screen (a.k.a first menu) when Escape key is pressed
+    exit_btn = tk.Label(app.root, text="✖", fg="white", bg=app.ACCENT, font=("Segoe UI", 16), cursor="hand2")
+    exit_btn.place(x=30, y=30)
+
     def exit_to_home(event=None):
         app.root.unbind("<Escape>")
         app.show_home()
 
+    def hover_on(e): 
+        exit_btn.config(bg=ACCENT_HOVER)
+
+    def hover_off(e): 
+        exit_btn.config(bg=ACCENT)
+
     app.root.bind("<Escape>", exit_to_home)
-    exit_btn = tk.Label(app.root, text="✖", fg="white", bg=app.ACCENT, font=("Segoe UI", 16), cursor="hand2")
-    exit_btn.place(x=30, y=30)
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", lambda e: app.show_home())
