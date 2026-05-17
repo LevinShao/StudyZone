@@ -14,7 +14,7 @@ from system_functions.registration_login_systems import *                      #
 from system_functions.music_system.music_settings import show_music_player     # Music Player module
 from system_functions.calendar import show_calendar                            # Calendar + Reminders systems
 from system_functions.skill_training_menu import show_skill_menu               # Skill Training Menu
-from system_functions.backend.ui_helpers import *                              # Import everything from UI helpers (integration module)
+from system_functions.backend.ui_helpers import *                              # Import everything from UI helpers module
 
 # UTILITY FUNCTION TO CREATE STYLED BUTTONS
 def create_button(parent, text, command, primary=True):

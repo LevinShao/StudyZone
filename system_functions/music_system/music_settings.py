@@ -10,7 +10,7 @@ def show_music_player(app):
     frame = tk.Frame(app.root, bg=app.BG_CARD, padx=100, pady=100)
     frame.pack(expand=True)
 
-    tk.Label(frame, text=f"Now Playing:\n{app.current_song.split('/')[-1]}", font=("Segoe UI", 18), bg=app.BG_CARD, fg=app.TEXT).pack(pady=20)
+    tk.Label(frame, text=f"Currently Playing:\n\n{app.current_song.split('/')[-1]}", font=("Segoe UI", 18), bg=app.BG_CARD, fg=app.TEXT).pack(pady=20)
 
     def set_volume(value):
         # Volume slider callback to set the music volume in pygame

@@ -29,6 +29,9 @@ def get_user_data(username):
                 "high_score": 0,
                 "games_played": 0,
                 "best_accuracy": 0
+            },
+            "reaction_trainer": {
+                "best_time": 0
             }
         }
         save_data(data)
@@ -42,6 +45,9 @@ def get_user_data(username):
             "high_score": 0,
             "games_played": 0,
             "best_accuracy": 0
+        },
+        "reaction_trainer": {
+            "best_time": 0
         }
     }
 

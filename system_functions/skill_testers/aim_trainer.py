@@ -11,12 +11,16 @@ def show_aim_trainer(app):
     user_data = get_user_data(app.current_user)
     aim_data = user_data["aim_trainer"]
 
+    # Mainframe
     frame = tk.Frame(app.root, bg=app.BG_CARD)
     frame.pack(fill="both", expand=True)
 
     # Top Bar with Title and Stats
     top_bar = tk.Frame(frame, bg=app.BG_CARD, height=70)
     top_bar.pack(fill="x", pady=(15, 5))
+
+    title_label = tk.Label(top_bar, text="Aim Trainer", font=("Segoe UI", 26, "bold"), bg=app.BG_CARD, fg=app.TEXT)
+    title_label.place(relx=0.5, rely=0.5, anchor="center")
 
     # Initial Game Stats
     score = 0
@@ -28,21 +32,17 @@ def show_aim_trainer(app):
     left_spacer = tk.Frame(top_bar, bg=app.BG_CARD, width=80)
     left_spacer.pack(side="left")
 
-    # Center Title
-    title_label = tk.Label(top_bar, text="Aim Trainer", font=("Segoe UI", 26, "bold"), bg=app.BG_CARD, fg=app.TEXT)
-    title_label.place(relx=0.5, rely=0.5, anchor="center")
-
     # Right Side (Labels)
-    right_info = tk.Frame(top_bar, bg=app.BG_CARD)
-    right_info.pack(side="right", padx=25)
+    right_spacer = tk.Frame(top_bar, bg=app.BG_CARD)
+    right_spacer.pack(side="right", padx=25)
 
-    timer_label = tk.Label(right_info, text=f"Time: {GAME_DURATION}", font=("Segoe UI", 14, "bold"), bg=app.BG_CARD, fg=app.TEXT)
+    timer_label = tk.Label(right_spacer, text=f"Time: {GAME_DURATION}", font=("Segoe UI", 14, "bold"), bg=app.BG_CARD, fg=app.TEXT)
     timer_label.pack(anchor="e")
 
-    score_label = tk.Label(right_info, text="Score: 0", font=("Segoe UI", 14, "bold"), bg=app.BG_CARD, fg=app.TEXT)
+    score_label = tk.Label(right_spacer, text="Score: 0", font=("Segoe UI", 14, "bold"), bg=app.BG_CARD, fg=app.TEXT)
     score_label.pack(anchor="e")
 
-    highscore_label = tk.Label(right_info, text=f"Personal Best: {aim_data['high_score']}", font=("Segoe UI", 14, "bold"), bg=app.BG_CARD, fg="#22c55e")
+    highscore_label = tk.Label(right_spacer, text=f"Personal Best: {aim_data['high_score']}", font=("Segoe UI", 14, "bold"), bg=app.BG_CARD, fg="#22c55e")
     highscore_label.pack(anchor="e")
 
     # Main Canvas Area
@@ -130,8 +130,8 @@ def show_aim_trainer(app):
         if not running:
             return
 
+        # Decrement the timer and update the label (if time runs out, end the game)
         time_left -= 1
-
         timer_label.config(text=f"Time: {time_left}")
 
         if time_left <= 0:
@@ -205,15 +205,13 @@ def show_aim_trainer(app):
             pass
 
         app.root.unbind("<Escape>")
-
         show_skill_menu(app)
-
-    app.root.bind("<Escape>", exit_to_skill_menu)
 
     exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
     exit_btn.place(x=30, y=30)
     exit_btn.lift()
     exit_btn.bind("<Button-1>", exit_to_skill_menu)
+    app.root.bind("<Escape>", exit_to_skill_menu)
 
     # Game Initialization
     spawn_targets()
