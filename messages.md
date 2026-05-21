@@ -11,7 +11,7 @@ Don't quit today.
 Put in some more effort. You'll thank yourself for it.
 Stay calm. Stay motivated.
 Don't fall for distractions.
-Success is right ahead.
+Success is right this way.
 Ready to begin another session?
 Always best to start thinking ahead.
 One day you will receive what you desire.

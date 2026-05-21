@@ -14,6 +14,7 @@ from system_functions.registration_login_systems import *                      #
 from system_functions.music_system.music_settings import show_music_player     # Music Player module
 from system_functions.calendar import show_calendar                            # Calendar + Reminders systems
 from system_functions.skill_training_menu import show_skill_menu               # Skill Training Menu
+from system_functions.flashcards.flashcards_main import show_flashcards        # Flashcards module
 from system_functions.backend.ui_helpers import *                              # Import everything from UI helpers module
 
 # UTILITY FUNCTION TO CREATE STYLED BUTTONS
@@ -216,8 +217,9 @@ class StudyZoneApp:
         create_square(grid, "Task Tracker", lambda: show_task_tracker(self)).grid(row=0, column=1, padx=20, pady=20)
         create_square(grid, "Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
         create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
-        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=4, padx=20, pady=20)
-        
+        create_square(grid, "Flashcards", lambda: show_flashcards(self)).grid(row=0, column=4, padx=20, pady=20)
+        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=5, padx=20, pady=20)
+
         # MUSIC PLAYER BUTTON
         canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
         canvas1.place(relx=0.97, rely=0.83, anchor="se")

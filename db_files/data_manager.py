@@ -25,6 +25,7 @@ def get_user_data(username):
             "tasks": [],
             "goals": [],
             "events": [],
+            "flashcards": [],
             "aim_trainer": {
                 "high_score": 0,
                 "games_played": 0,
@@ -41,6 +42,7 @@ def get_user_data(username):
         "tasks": [],
         "goals": [],
         "events": [],
+        "flashcards": [],
         "aim_trainer": {
             "high_score": 0,
             "games_played": 0,

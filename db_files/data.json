@@ -1,8 +1,16 @@
 {
     "StudyDev": {
         "tasks": [],
-        "goals": [],
+        "goals": [
+            {
+                "title": "Test",
+                "date": "2026-06-01",
+                "priority": true,
+                "done": false
+            }
+        ],
         "events": [],
+        "flashcards": [],
         "aim_trainer": {
             "high_score": 41,
             "games_played": 9,
