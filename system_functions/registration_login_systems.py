@@ -4,7 +4,7 @@ import json                         # Data storage
 import os                           # File handling
 import hashlib                      # Secure password hashing
 from datetime import datetime       # Date input validation
-from system_functions.backend.ui_helpers import bind_exit_home # Helper function to bind Escape key to exit menus
+from system_functions.backend.ui_helpers import create_field, bind_exit_home # Helper function to bind Escape key to exit menus
 
 # DATABASE SETUP
 ACCOUNTDB_FILE = "db_files/users.json"
@@ -154,8 +154,8 @@ def user_login(self):
     tk.Label(frame, text="Login", font=("Segoe UI", 26, "bold"), bg=self.BG_CARD, fg=self.TEXT).pack(pady=10)
 
     # Input fields
-    username, _ = self.create_field(frame, "Username")
-    password, _ = self.create_field(frame, "Password", is_password=True)
+    username, _ = create_field(frame, "Username")
+    password, _ = create_field(frame, "Password", is_password=True)
 
     general_error = tk.Label(frame, text="", fg="red", bg=self.BG_CARD)
     general_error.pack()

@@ -3,8 +3,8 @@
         "tasks": [],
         "goals": [
             {
-                "title": "Test",
-                "date": "2026-06-01",
+                "title": "Birthday",
+                "date": "2026-06-17",
                 "priority": true,
                 "done": false
             }
@@ -13,11 +13,11 @@
         "flashcards": [],
         "aim_trainer": {
             "high_score": 41,
-            "games_played": 9,
+            "games_played": 11,
             "best_accuracy": 100
         },
         "reaction_trainer": {
-            "best_time": 197
+            "best_time": 186
         }
     }
 }

@@ -2,7 +2,7 @@ import tkinter as tk
 from datetime import datetime
 from tkinter import messagebox
 from db_files.data_manager import get_user_data, update_user_data
-from system_functions.backend.ui_helpers import create_small_button, bind_exit_menu
+from system_functions.backend.ui_helpers import create_small_button, create_field, bind_exit_menu
 
 def show_goal_planner(app):
     app.clear()
@@ -20,8 +20,8 @@ def show_goal_planner(app):
     goals = user_data["goals"]
 
     # INPUTS
-    goal_entry, _ = app.create_field(frame, "Goal Title")
-    deadline_entry, _ = app.create_field(frame, "Target Date (YYYY-MM-DD)")
+    goal_entry, _ = create_field(frame, "Goal Title")
+    deadline_entry, _ = create_field(frame, "Target Date (YYYY-MM-DD)")
 
     error_duplicate_name = tk.Label(frame, text="", fg="#ef4444", bg=app.BG_CARD)
     error_duplicate_name.pack(anchor="w", pady=1)
@@ -31,7 +31,6 @@ def show_goal_planner(app):
 
     # PRIORITY TOGGLE
     priority_var = tk.BooleanVar()
-
     priority_checkbox = tk.Checkbutton(frame, text="Priority Goal", variable=priority_var, bg=app.BG_CARD, fg=app.TEXT, 
                                        selectcolor=app.BG_CARD, activebackground=app.BG_CARD, activeforeground=app.TEXT)
     priority_checkbox.pack(anchor="w", pady=10)
@@ -46,10 +45,7 @@ def show_goal_planner(app):
         for g in goals:
             priority_mark = "❗ " if g["priority"] else ""
             status = "✓" if g["done"] else "✗"
-            listbox.insert(
-                tk.END,
-                f"{status} {priority_mark}{g['title']} ({g['date']})"
-            )
+            listbox.insert(tk.END, f"{status} {priority_mark}{g['title']} ({g['date']})")
 
     def validate_inputs(event=None):
         # Input validation function to check date format and priority selection before enabling the Add Goal button

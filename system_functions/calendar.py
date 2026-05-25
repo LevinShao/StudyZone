@@ -6,7 +6,7 @@ import calendar                    # For calendar generation
 import threading                   # For running the reminder loop in the background
 from plyer import notification     # Notification system
 from db_files.data_manager import get_user_data, update_user_data
-from system_functions.backend.ui_helpers import create_small_button, bind_exit_menu
+from system_functions.backend.ui_helpers import create_small_button, create_field, bind_exit_menu
 
 def send_notification(title, message):
     # Send a desktop notification using Plyer
@@ -149,8 +149,8 @@ def show_day_view(app, year, month, day):
 
     tk.Label(frame, text=f"Events for {date_str}", font=("Segoe UI", 20), bg=app.BG_CARD, fg=app.TEXT).pack(pady=10)
 
-    title_entry, _ = app.create_field(frame, "Event Title")
-    time_entry, _ = app.create_field(frame, "Time (HH:MM)")
+    title_entry, _ = create_field(frame, "Event Title")
+    time_entry, _ = create_field(frame, "Time (HH:MM)")
 
     listbox = tk.Listbox(frame, width=50)
     listbox.pack(pady=20)
@@ -159,7 +159,7 @@ def show_day_view(app, year, month, day):
         # Retrieve events for the specified date by filtering the user's events based on the date string
         return [e for e in events if e["date"] == date_str]
 
-    def refresh():
+    def refresh_list():
         listbox.delete(0, tk.END)
         for e in get_day_events():
             status = "✓" if e.get("done") else "✗"
@@ -188,7 +188,7 @@ def show_day_view(app, year, month, day):
 
         events.append(event)
         update_user_data(app.current_user, user_data)
-        refresh()
+        refresh_list()
 
     def get_selected_event():
         # Get the currently selected event in the listbox by matching the selected index with the filtered list of events for that day
@@ -230,7 +230,7 @@ def show_day_view(app, year, month, day):
             event["datetime"] = f"{event['date']} {ti.get()}"
 
             update_user_data(app.current_user, user_data)
-            refresh()
+            refresh_list()
             win.destroy()
 
         tk.Button(win, text="Save", command=save, bg=app.ACCENT, fg=app.TEXT).pack(pady=10)
@@ -241,7 +241,7 @@ def show_day_view(app, year, month, day):
         if event:
             event["done"] = True
             update_user_data(app.current_user, user_data)
-            refresh()
+            refresh_list()
 
     def delete_event():
         # Delete the selected event from the list of events, then update user data and refresh the list box
@@ -249,7 +249,7 @@ def show_day_view(app, year, month, day):
         if event:
             events.remove(event)
             update_user_data(app.current_user, user_data)
-            refresh()
+            refresh_list()
 
     def show_event_popup(event): 
         # Show event details in a popup
@@ -297,4 +297,4 @@ def show_day_view(app, year, month, day):
         add_btn.config(state="disabled")
         edit_btn.config(state="disabled")
 
-    refresh()
+    refresh_list()

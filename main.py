@@ -13,8 +13,9 @@ from system_functions.user_profile_dashboard import show_profile_menu          #
 from system_functions.registration_login_systems import *                      # Registration & Login systems
 from system_functions.music_system.music_settings import show_music_player     # Music Player module
 from system_functions.calendar import show_calendar                            # Calendar + Reminders systems
-from system_functions.skill_training_menu import show_skill_menu               # Skill Training Menu
 from system_functions.flashcards.flashcards_main import show_flashcards        # Flashcards module
+from system_functions.skill_training_menu import show_skill_menu               # Skill Training Menu
+from system_functions.pomodoro_timer import show_pomodoro_timer                # Flashcards module
 from system_functions.backend.ui_helpers import *                              # Import everything from UI helpers module
 
 # UTILITY FUNCTION TO CREATE STYLED BUTTONS
@@ -36,41 +37,15 @@ def create_button(parent, text, command, primary=True):
 
     return btn # Return the styled button widget
 
-# UTILITY FUNCTION TO CREATE STYLED INPUT FIELDS WITH LABELS AND ERROR MESSAGES
-def create_field(parent, label, is_password=False):
-    tk.Label(parent, text=label, bg=BG_CARD, fg=TEXT).pack(anchor="w") # Field label (aligned to the left)
-
-    # Input wrapper to hold the entry and optional password toggle button
-    # Ensures consistent spacing even when toggle is not present
-    wrapper = tk.Frame(parent, bg=BG_CARD)
-    wrapper.pack(fill="x", pady=(6, 0))
-
-    entry = tk.Entry(wrapper, bg=INPUT_BG, fg=TEXT, insertbackground="white", relief="flat", font=("Segoe UI", 12), 
-                     highlightbackground=TEXT, highlightthickness=1, width=45, show="*" if is_password else "")
-    
-    entry.pack(side="left", fill="x", expand=True, ipadx=10) # Input field with padding and expansion to fill available space
-
-    if is_password: # If this is a password field, add a toggle button to show/hide the password
-        def toggle():
-            entry.config(show="" if entry.cget("show") == "*" else "*")
-
-        tk.Button(wrapper, text="👁", command=toggle, bg="#334155", fg=TEXT, relief="flat", width=4).pack(side="right", padx=5)
-
-    error = tk.Label(parent, text="", fg="#ef4444", bg=BG_CARD, font=("Arial", 8))
-    error.pack(anchor="w", pady=(0, 2))
-
-    return entry, error # Return the entry widget and the error label for validation feedback
-
 # APP CLASS
 class StudyZoneApp:
     def __init__(self, root):
         # Initialize the main application class, set up the root window, and show the home screen
         self.current_user = None
         
+        # Fullscreen but keeps taskbar & buttons
         self.root = root
         self.root.title("StudyZone")
-
-        # Fullscreen but keeps taskbar & buttons
         self.root.state("zoomed")
         self.root.configure(bg="#111111")
 
@@ -79,9 +54,6 @@ class StudyZoneApp:
         self.BG_CARD = BG_CARD
         self.ACCENT = ACCENT
         self.TEXT = TEXT
-        self.create_field = create_field
-        self.create_square = create_square
-        self.show_skill_menu = show_skill_menu
 
         # Initialize music system
         pygame.mixer.init()
@@ -219,6 +191,7 @@ class StudyZoneApp:
         create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
         create_square(grid, "Flashcards", lambda: show_flashcards(self)).grid(row=0, column=4, padx=20, pady=20)
         create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=5, padx=20, pady=20)
+        create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=1, column=1, padx=20, pady=50)
 
         # MUSIC PLAYER BUTTON
         canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)

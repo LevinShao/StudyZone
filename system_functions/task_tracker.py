@@ -3,7 +3,7 @@ from tkinter import ttk
 from datetime import datetime
 from tkinter import messagebox
 from db_files.data_manager import get_user_data, update_user_data
-from system_functions.backend.ui_helpers import create_small_button, bind_exit_menu
+from system_functions.backend.ui_helpers import create_small_button, create_field, bind_exit_menu
 
 def show_task_tracker(app):
     app.clear()
@@ -22,9 +22,9 @@ def show_task_tracker(app):
     tasks = user_data["tasks"]
 
     # INPUT FIELDS
-    task_entry, _ = app.create_field(frame, "Task Name")
-    desc_entry, _ = app.create_field(frame, "Description")
-    deadline_entry, _ = app.create_field(frame, "Deadline (YYYY-MM-DD)")
+    task_entry, _ = create_field(app, "Task Name")
+    desc_entry, _ = create_field(app, "Description")
+    deadline_entry, _ = create_field(app, "Deadline (YYYY-MM-DD)")
 
     # Deadline error label
     error_deadline = tk.Label(frame, text="", fg="#ef4444", bg=app.BG_CARD)
