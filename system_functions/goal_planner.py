@@ -2,7 +2,7 @@ import tkinter as tk
 from datetime import datetime
 from tkinter import messagebox
 from db_files.data_manager import get_user_data, update_user_data
-from system_functions.backend.ui_helpers import create_small_button, create_field, bind_exit_menu
+from system_functions.backend.ui_helpers import create_small_button, bind_exit_menu
 
 def show_goal_planner(app):
     app.clear()
@@ -20,8 +20,8 @@ def show_goal_planner(app):
     goals = user_data["goals"]
 
     # INPUTS
-    goal_entry, _ = create_field(frame, "Goal Title")
-    deadline_entry, _ = create_field(frame, "Target Date (YYYY-MM-DD)")
+    goal_entry, _ = app.create_field(frame, "Goal Title")
+    deadline_entry, _ = app.create_field(frame, "Target Date (YYYY-MM-DD)")
 
     error_duplicate_name = tk.Label(frame, text="", fg="#ef4444", bg=app.BG_CARD)
     error_duplicate_name.pack(anchor="w", pady=1)
@@ -193,6 +193,7 @@ def show_goal_planner(app):
     # Row 1
     add_btn = create_small_button(btn_frame, "Add Goal", add_goal, app, primary=True)
     add_btn.grid(row=0, column=0, padx=15, pady=15)
+    add_btn.config(state="disabled") # Initially disable the add button until valid inputs are provided
     create_small_button(btn_frame, "Edit Goal", edit_goal, app, primary=False).grid(row=0, column=1, padx=15, pady=15)
 
     # Row 2

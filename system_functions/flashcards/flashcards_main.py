@@ -1,6 +1,6 @@
 import tkinter as tk
 from system_functions.flashcards.flashcards_review import review_flashcards
-from system_functions.backend.ui_helpers import create_small_button, create_field, bind_exit_menu
+from system_functions.backend.ui_helpers import create_small_button, bind_exit_menu
 from db_files.data_manager import get_user_data, update_user_data
 
 def show_flashcards(app):
@@ -21,8 +21,8 @@ def show_flashcards(app):
     tk.Label(frame, text="Flashcards", font=("Segoe UI", 26, "bold"), bg=app.BG_CARD, fg=app.TEXT).pack(pady=20)
 
     # Input fields
-    question_entry, _ = create_field(frame, "Question")
-    answer_entry, _ = create_field(frame, "Answer")
+    question_entry, _ = app.create_field(frame, "Question")
+    answer_entry, _ = app.create_field(frame, "Answer")
 
     # Listbox for flashcard display
     listbox = tk.Listbox(frame, width=60, height=10)

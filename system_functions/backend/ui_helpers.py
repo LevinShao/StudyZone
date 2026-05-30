@@ -9,9 +9,9 @@ TEXT = "#f1f5f9"           # off-white text for high contrast and readability
 SUBTLE = "#94a3b8"         # lighter text for subtitles and less important info
 INPUT_BG = "#020617"       # very dark background for input fields to make them stand out
 
-def create_small_button(app, text, command, primary=True):
+def create_small_button(parent, text, command, app, primary=True):
     bg = app.ACCENT if primary else "#22C55E"
-    btn = tk.Label(app, text=text, bg=bg, fg="white", font=("Segoe UI", 12, "bold"), width=18, height=2,cursor="hand2")
+    btn = tk.Label(parent, text=text, bg=bg, fg="white", font=("Segoe UI", 12, "bold"), width=18, height=2,cursor="hand2")
 
     def on_enter(e):
         # Change button color on hover
@@ -44,30 +44,6 @@ def create_square(app, text, command):
     square.bind("<Button-1>", lambda e: command())
 
     return square
-
-def create_field(app, label, is_password=False):
-    # UTILITY FUNCTION TO CREATE STYLED INPUT FIELDS WITH LABELS AND ERROR MESSAGES
-    tk.Label(app, text=label, bg=app.BG_CARD, fg=app.TEXT).pack(anchor="w") # Field label (aligned to the left)
-
-    # Input wrapper to hold the entry and optional password toggle button
-    # Ensures consistent spacing even when toggle is not present
-    wrapper = tk.Frame(app, bg=app.BG_CARD)
-    wrapper.pack(fill="x", pady=(6, 0))
-
-    entry = tk.Entry(wrapper, bg=app.INPUT_BG, fg=app.TEXT, insertbackground="white", relief="flat", font=("Segoe UI", 12), 
-                     highlightbackground=app.TEXT, highlightthickness=1, width=45, show="*" if is_password else "")
-    entry.pack(side="left", fill="x", expand=True, ipadx=10) # Input field with padding and expansion to fill available space
-
-    if is_password: # If this is a password field, add a toggle button to show/hide the password
-        def toggle():
-            entry.config(show="" if entry.cget("show") == "*" else "*")
-
-        tk.Button(wrapper, text="👁", command=toggle, bg="#334155", fg=app.TEXT, relief="flat", width=4).pack(side="right", padx=5)
-
-    error = tk.Label(app, text="", fg="#ef4444", bg=app.BG_CARD, font=("Arial", 8))
-    error.pack(anchor="w", pady=(0, 2))
-
-    return entry, error # Return the entry widget and the error label for validation feedback
 
 # TWO DIFFERENT EXIT BUTTON FUNCTIONS TO AVOID CONFLICTS WITH BINDINGS IN DIFFERENT SCREENS 
 # (ESCAPE KEY BINDS TO DIFFERENT FUNCTIONS BASED ON SCREEN)

@@ -3,6 +3,7 @@ from tkinter import messagebox
 import json
 from db_files.data_manager import load_data, save_data
 from system_functions.backend.ui_helpers import bind_exit_menu
+import pygame # Import pygame to stop music playback when logging out or deleting account
 
 def show_profile_menu(app):
     app.clear() # Clear the current screen to show the profile menu
@@ -18,6 +19,7 @@ def show_profile_menu(app):
             return
         
         app.current_user = None
+        pygame.mixer.music.stop()
         app.show_home()
 
     def delete_account():
@@ -45,6 +47,7 @@ def show_profile_menu(app):
 
         # logout and show first menu (home screen)
         app.current_user = None
+        pygame.mixer.music.stop()
         app.show_home()
 
     # Buttons
