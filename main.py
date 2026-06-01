@@ -199,7 +199,7 @@ class StudyZoneApp:
 
         # MOTIVATIONAL MESSAGES. RANDOMLY SELECTED FROM messages.md
         try:
-            with open("messages.md", "r", encoding="utf-8") as f:
+            with open("system_messages/messages.md", "r", encoding="utf-8") as f:
                 # Reads lines, strips whitespace, removes empty lines
                 messages = [line.strip() for line in f if line.strip()]
             message = random.choice(messages)
