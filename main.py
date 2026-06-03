@@ -3,6 +3,7 @@ from tkinter import messagebox      # For showing pop-up messages
 import json                         # Data storage
 import os                           # File handling
 import random                       # For random motivational messages
+from datetime import datetime       # Time detection
 from PIL import Image, ImageTk      # Logo
 import pygame                       # Music player + playlist system (Using Pygame since Tkinter does not support music functionality natively)
 
@@ -91,6 +92,9 @@ class StudyZoneApp:
         self.create_field = create_field
         self.create_square = create_square
 
+        self.say_hello = ["Welcome", "Hello", "Nice to meet you", "Hey there"]
+        self.main_msg = random.choice(self.say_hello)
+
         # Initialize music system
         pygame.mixer.init()
 
@@ -100,6 +104,17 @@ class StudyZoneApp:
         self.volume = 0.5
 
         pygame.mixer.music.set_volume(self.volume)
+
+        current_hour = datetime.now().hour
+
+        if 5 <= current_hour < 12:
+            self.time_emoji = "🌅"
+        elif 12 <= current_hour < 18:
+            self.time_emoji = "☀️"
+        elif 18 <= current_hour < 22:
+            self.time_emoji = "🌆"
+        else:
+            self.time_emoji = "🌙"
 
         self.show_home()
 
@@ -197,17 +212,26 @@ class StudyZoneApp:
         container = tk.Frame(self.root, bg=BG_MAIN)
         container.pack(fill="both", expand=True)
 
+        row_frame = tk.Frame(container, bg=BG_MAIN)
+        row_frame.pack(pady=(50, 35))
+
         # MOTIVATIONAL MESSAGES. RANDOMLY SELECTED FROM messages.md
         try:
             with open("system_messages/messages.md", "r", encoding="utf-8") as f:
                 # Reads lines, strips whitespace, removes empty lines
                 messages = [line.strip() for line in f if line.strip()]
-            message = random.choice(messages)
+                message = random.choice(messages)
         except FileNotFoundError:
             # Fallback message if messages.md is missing for whatever reason
             message = "Focus on your goals."
 
-        tk.Label(container, text=message, font=("Segoe UI", 22, "bold"), fg=TEXT, bg=BG_MAIN).pack(pady=100)
+        tk.Label(row_frame, text=f"{self.time_emoji}", font=("Segoe UI", 80, "bold"), fg=TEXT, bg=BG_MAIN).pack(side="left", anchor="w", padx=(0, 10))
+
+        text_stack_frame = tk.Frame(row_frame, bg=BG_MAIN)
+        text_stack_frame.pack(side="left", anchor="w")
+
+        tk.Label(text_stack_frame, text=f"{self.main_msg}, {self.current_user}", font=("Segoe UI", 30, "bold"), fg=TEXT, bg=BG_MAIN).pack(anchor="w")
+        tk.Label(text_stack_frame, text=message, font=("Segoe UI", 16), fg=TEXT, bg=BG_MAIN).pack(anchor="w", pady=(5, 0))
 
         # TOOL GRID
         grid = tk.Frame(container, bg=BG_MAIN)
