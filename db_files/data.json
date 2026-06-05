@@ -11,6 +11,20 @@
         },
         "reaction_trainer": {
             "best_time": 0
+        },
+        "sticky_notes": [],
+        "journal_entries": [
+            {
+                "title": "Test",
+                "weather": "",
+                "emotion": "",
+                "content": "e",
+                "date": "30 May 2026"
+            }
+        ],
+        "typing_test": {
+            "best_wpm": 32,
+            "best_accuracy": 100
         }
     }
 }

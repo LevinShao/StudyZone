@@ -152,7 +152,7 @@ def show_reaction_trainer(app):
     # EXIT BUTTON FUNCTIONS
     def exit_to_skill_menu(event=None):
         # Import inside of function (to prevent circular import error)
-        from system_functions.skill_training_menu import show_skill_menu
+        from system_functions.inner_menus.skill_training_menu import show_skill_menu
 
         app.root.unbind("<Escape>")
         show_skill_menu(app)

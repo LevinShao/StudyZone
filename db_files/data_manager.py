@@ -26,6 +26,8 @@ def get_user_data(username):
             "goals": [],
             "events": [],
             "flashcards": [],
+            "sticky_notes": [],
+            "journal_entries": [],
             "aim_trainer": {
                 "high_score": 0,
                 "games_played": 0,
@@ -43,6 +45,8 @@ def get_user_data(username):
         "goals": [],
         "events": [],
         "flashcards": [],
+        "sticky_notes": [],
+        "journal_entries": [],
         "aim_trainer": {
             "high_score": 0,
             "games_played": 0,

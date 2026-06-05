@@ -8,16 +8,18 @@ from PIL import Image, ImageTk      # Logo
 import pygame                       # Music player + playlist system (Using Pygame since Tkinter does not support music functionality natively)
 
 # INTEGRATION OF FUNCTIONALITY MODULES
-from system_functions.task_tracker import show_task_tracker                    # Task Tracker module
-from system_functions.goal_planner import show_goal_planner                    # Goal Planner module
-from system_functions.user_profile_dashboard import show_profile_menu          # User Profile Dashboard module
-from system_functions.registration_login_systems import *                      # Registration & Login systems
-from system_functions.music_system.music_settings import show_music_player     # Music Player module
-from system_functions.calendar.calendar_view import show_calendar              # Calendar + Reminders systems
-from system_functions.flashcards.flashcards_main import show_flashcards        # Flashcards module
-from system_functions.skill_training_menu import show_skill_menu               # Skill Training Menu
-from system_functions.pomodoro_timer import show_pomodoro_timer                # Flashcards module
-from system_functions.backend.ui_helpers import *                              # Import everything from UI helpers module
+from system_functions.task_tracker import show_task_tracker                      # Task Tracker module
+from system_functions.goal_planner import show_goal_planner                      # Goal Planner module
+from system_functions.user_profile_dashboard import show_profile_menu            # User Profile Dashboard module
+from system_functions.registration_login_systems import *                        # Registration & Login systems
+from system_functions.music_system.music_settings import show_music_player       # Music Player module
+from system_functions.calendar.calendar_view import show_calendar                # Calendar + Reminders systems
+from system_functions.flashcards.flashcards_main import show_flashcards          # Flashcards module
+from system_functions.pomodoro_timer import show_pomodoro_timer                  # Pomodoro Timer module
+from system_functions.backend.ui_helpers import *                                # Import everything from UI helpers module
+
+from system_functions.inner_menus.skill_training_menu import show_skill_menu     # Skill Training Menu
+from system_functions.inner_menus.express_yourself_menu import show_express_menu # Express Yourself Menu
 
 # UTILITY FUNCTION TO CREATE STYLED INPUT FIELDS WITH LABELS AND ERROR MESSAGES
 def create_field(parent, label, is_password=False):
@@ -40,7 +42,6 @@ def create_field(parent, label, is_password=False):
 
         # If this is a password field, add a toggle button to show/hide the password
         def toggle():
-
             # Toggle between showing and hiding the password characters
             # Works by checking the current "show" configuration of the entry widget
             entry.config(show="" if entry.cget("show") == "*" else "*")
@@ -91,8 +92,7 @@ class StudyZoneApp:
         self.TEXT = TEXT
         self.create_field = create_field
         self.create_square = create_square
-
-        self.say_hello = ["Welcome", "Hello", "Nice to meet you", "Hey there"]
+        self.say_hello = ["Welcome to StudyZone", "Hello", "Nice to meet you", "Hey there"]
         self.main_msg = random.choice(self.say_hello)
 
         # Initialize music system
@@ -105,16 +105,17 @@ class StudyZoneApp:
 
         pygame.mixer.music.set_volume(self.volume)
 
-        current_hour = datetime.now().hour
+        # Dynamic time-based emoji in welcome message
+        current_hour = datetime.now().hour # Current Time
 
         if 5 <= current_hour < 12:
-            self.time_emoji = "🌅"
+            self.time_emoji = "🌅"      # Dawn / Morning
         elif 12 <= current_hour < 18:
-            self.time_emoji = "☀️"
+            self.time_emoji = "☀️"      # Day / Afternoon
         elif 18 <= current_hour < 22:
-            self.time_emoji = "🌆"
+            self.time_emoji = "🌆"      # Dusk / Evening
         else:
-            self.time_emoji = "🌙"
+            self.time_emoji = "🌙"      # Night / Midnight
 
         self.show_home()
 
@@ -209,12 +210,6 @@ class StudyZoneApp:
         self.clear()
         self.root.configure(bg=BG_MAIN)
 
-        container = tk.Frame(self.root, bg=BG_MAIN)
-        container.pack(fill="both", expand=True)
-
-        row_frame = tk.Frame(container, bg=BG_MAIN)
-        row_frame.pack(pady=(50, 35))
-
         # MOTIVATIONAL MESSAGES. RANDOMLY SELECTED FROM messages.md
         try:
             with open("system_messages/messages.md", "r", encoding="utf-8") as f:
@@ -225,13 +220,21 @@ class StudyZoneApp:
             # Fallback message if messages.md is missing for whatever reason
             message = "Focus on your goals."
 
-        tk.Label(row_frame, text=f"{self.time_emoji}", font=("Segoe UI", 80, "bold"), fg=TEXT, bg=BG_MAIN).pack(side="left", anchor="w", padx=(0, 10))
+        # Container for welcome message and tool grid
+        container = tk.Frame(self.root, bg=BG_MAIN)
+        container.pack(fill="both", expand=True)
 
-        text_stack_frame = tk.Frame(row_frame, bg=BG_MAIN)
-        text_stack_frame.pack(side="left", anchor="w")
+        # Welcome Message with dynamic emoji based on time of day
+        welcome_frame = tk.Frame(container, bg=BG_MAIN)
+        welcome_frame.pack(pady=(60, 45))
 
-        tk.Label(text_stack_frame, text=f"{self.main_msg}, {self.current_user}", font=("Segoe UI", 30, "bold"), fg=TEXT, bg=BG_MAIN).pack(anchor="w")
-        tk.Label(text_stack_frame, text=message, font=("Segoe UI", 16), fg=TEXT, bg=BG_MAIN).pack(anchor="w", pady=(5, 0))
+        # Use grid layout for welcome message to allow emoji and text to be aligned nicely
+        row_frame = tk.Frame(welcome_frame, bg=BG_MAIN)
+        row_frame.pack()
+
+        tk.Label(row_frame, text=self.time_emoji, font=("Segoe UI", 70), fg=TEXT, bg=BG_MAIN).grid(row=0, column=0, rowspan=2, padx=(0, 12))
+        tk.Label(row_frame, text=f"{self.main_msg}, {self.current_user}", font=("Segoe UI", 30, "bold"), fg=TEXT, bg=BG_MAIN).grid(row=0, column=1, sticky="w")
+        tk.Label(row_frame, text=message, font=("Segoe UI", 20), fg=SUBTLE, bg=BG_MAIN).grid(row=1, column=1, sticky="w")
 
         # TOOL GRID
         grid = tk.Frame(container, bg=BG_MAIN)
@@ -250,8 +253,9 @@ class StudyZoneApp:
         create_square(grid, "Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
         create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
         create_square(grid, "Flashcards", lambda: show_flashcards(self)).grid(row=0, column=4, padx=20, pady=20)
-        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=5, padx=20, pady=20)
-        create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=1, column=1, padx=20, pady=50)
+        create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=0, column=5, padx=20, pady=20)
+        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=1, column=1, padx=20, pady=50)
+        create_square(grid, "Express Yourself", lambda: show_express_menu(self)).grid(row=1, column=2, padx=20, pady=50)
 
         # MUSIC PLAYER BUTTON
         canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
