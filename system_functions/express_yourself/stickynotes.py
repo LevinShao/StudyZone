@@ -7,12 +7,8 @@ from db_files.data_manager import get_user_data, update_user_data
 def sticky_main(app):
     app.clear()
 
+    # LOAD DATA
     user_data = get_user_data(app.current_user)
-
-    # Ensure sticky_notes exists for older accounts
-    if "sticky_notes" not in user_data:
-        user_data["sticky_notes"] = []
-
     sticky_notes = user_data["sticky_notes"]
 
     container = tk.Frame(app.root, bg=BG_MAIN)

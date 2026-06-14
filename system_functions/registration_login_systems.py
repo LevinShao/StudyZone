@@ -44,18 +44,60 @@ def save_user(username, email, dob, password):
         if existing_user.lower() == username.lower():
             return False
 
-    data[username] = { # Storing user data (password is hashed for security)
-        "username": username, # Username
-        "email": email, # Email
-        "dob": dob, # Date of Birth
-        "password": hash_password(password), # Hashed password
-        "streak": 0 # Streak (currently placeholder)
+    data[username] = {
+        "username": username,
+        "email": email,
+        "dob": dob,
+        "password": hash_password(password),
+        "streak": 0,
+        "best_streak": 0,
+        "last_login_date": ""
     }
 
     with open(ACCOUNTDB_FILE, "w") as f: # Save updated user data back to JSON file
         json.dump(data, f, indent=4)
 
     return True # Return True if user was saved successfully, False if username already exists (case-insensitive)
+
+def update_login_streak(username):
+    with open(ACCOUNTDB_FILE, "r") as f:
+        data = json.load(f)
+
+    user = data[username]
+    today = datetime.now().date()
+    last_login = user.get("last_login_date", "")
+
+    # First login ever
+    if last_login == "":
+        user["streak"] = 1
+        user["best_streak"] = 1
+        user["last_login_date"] = today.strftime("%Y-%m-%d")
+
+    else:
+        last_login_date = datetime.strptime(last_login, "%Y-%m-%d").date()
+        difference = (today - last_login_date).days
+
+        # Same day
+        if difference == 0:
+            pass
+
+        # Consecutive day
+        elif difference == 1:
+            user["streak"] += 1
+
+            if user["streak"] > user.get("best_streak", 0):
+                user["best_streak"] = user["streak"]
+
+            user["last_login_date"] = today.strftime("%Y-%m-%d")
+
+        # Missed one or more days
+        else:
+            # Reset streak but keep best streak record
+            user["streak"] = 1
+            user["last_login_date"] = today.strftime("%Y-%m-%d")
+
+    with open(ACCOUNTDB_FILE, "w") as f:
+        json.dump(data, f, indent=4)
 
 # REGISTRATION SCREEN
 def user_registration(self):
@@ -131,7 +173,9 @@ def user_registration(self):
             return
 
         self.current_user = username.get()
+        update_login_streak(self.current_user)
         self.show_main_menu()
+        self.play_music()
 
     # Buttons (submit button starts disabled and only enables when all fields are valid)
     submit_btn = tk.Button(frame, text="Submit", state="disabled", command=submit, bg=self.ACCENT, fg=self.TEXT, width=20, height=2)
@@ -190,7 +234,9 @@ def user_login(self):
             return
 
         self.current_user = user["username"]
+        update_login_streak(self.current_user)
         self.show_main_menu()
+        self.play_music()
 
     # Buttons (login starts disabled until user types something, back button to return to home screen)
     login_btn = tk.Button(frame, text="Log In", state="disabled", command=login, bg=self.ACCENT, fg=self.TEXT, width=20, height=2)

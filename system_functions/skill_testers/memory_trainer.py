@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import messagebox
+import time
 from math import sqrt
 from random import shuffle
 
@@ -19,7 +19,8 @@ def show_memory_trainer(app):
     chances = 30
     won = 0
     answer_list = []
-    
+    waiting_for_reset = False
+        
     frame = tk.Frame(app.root, bg=app.BG_CARD)
     frame.pack(fill="both", expand=True)
 
@@ -31,8 +32,10 @@ def show_memory_trainer(app):
     title_label.place(relx=0.5, rely=0.5, anchor="center")
 
     # Chances Label
-    label = Label(frame, text=f"chances = {chances}", font=("Helvetica", 20), bg=app.BG_CARD, fg=app.TEXT)
-    label.pack(pady=10)
+    chances_label = Label(frame, text=f"chances = {chances}", font=("Helvetica", 20), bg=app.BG_CARD, fg=app.TEXT)
+    chances_label.pack(pady=10)
+    status_label = Label(frame, text="Find all matching pairs!", font=("Helvetica", 14), bg=app.BG_CARD, fg="#94a3b8")
+    status_label.pack(pady=(0, 10))
 
     # Function to determine the number of rows and columns for the grid based on the total number of tiles
     def find_rows_cols(number):
@@ -50,13 +53,15 @@ def show_memory_trainer(app):
     rows, cols = find_rows_cols(len(matches))
 
     def reset():
-        nonlocal matches, won, chances, answer_list
+        nonlocal matches, won, chances, answer_list, waiting_for_reset
 
         chances = 30
         won = 0
+        waiting_for_reset = False
         shuffle(matches)
         answer_list = []
-        label["text"] = f"chances = {chances}"
+        chances_label["text"] = f"chances = {chances}"
+        status_label["text"] = "Find all matching pairs!"
 
         for tile in tiles:
             # Reset each tile's text and state
@@ -64,9 +69,9 @@ def show_memory_trainer(app):
             tile["state"] = NORMAL
 
     def onclick(index):
-        nonlocal answer_list, won, chances
+        nonlocal answer_list, won, chances, waiting_for_reset
 
-        if chances <= 0:
+        if chances <= 0 or waiting_for_reset:
             return
 
         # Check if click is valid
@@ -84,26 +89,41 @@ def show_memory_trainer(app):
                 won += 1
 
                 if won == NUMBER:
-                    label["text"] = "You Won!"
+                    chances_label["text"] = "You Won!"
+                    status_label.config(text="🎉 Congratulations!", fg="#f59e0b")
                 else:
-                    label["text"] = f"It's a Match! chances = {chances}"
+                    chances_label["text"] = f"chances = {chances}"
+                    status_label.config(text="✅ It's a Match!", fg="#22c55e")
 
                 answer_list = []
             else:
                 # If they do not match
                 chances -= 1
-                label["text"] = f"Ahhh try again, chances = {chances}"
-                messagebox.showinfo("Incorrect", "Incorrect")
-                
+                chances_label["text"] = f"chances = {chances}"
+                status_label.config(text="❌ Not a match. Try again.", fg="#f87171")
+
                 # Reset tiles after incorrect guess
-                tiles[answer_list[0]]["text"] = ' '
-                tiles[answer_list[1]]["text"] = ' '
+                first_tile = answer_list[0]
+                second_tile = answer_list[1]
                 answer_list = []
-                
-                if chances <= 0:
-                    for tile in tiles:
-                        tile["state"] = DISABLED
-                    label["text"] = "You Lost D:"
+                waiting_for_reset = True
+
+                def hide_tiles():
+                    nonlocal waiting_for_reset
+
+                    tiles[first_tile]["text"] = ' '
+                    tiles[second_tile]["text"] = ' '
+
+                    waiting_for_reset = False
+
+                    if chances <= 0:
+                        for tile in tiles:
+                            tile["state"] = DISABLED
+
+                        chances_label["text"] = "You Lost D:"
+                        status_label.config(text="💀 Out of chances.", fg="#f87171")
+
+                app.root.after(1250, hide_tiles)
 
     # Dedicated grid frame to separate pack and grid layout managers
     grid_frame = Frame(frame, bg=app.BG_CARD)

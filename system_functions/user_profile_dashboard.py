@@ -51,9 +51,9 @@ def show_profile_menu(app):
         app.show_home()
 
     # Buttons
-    tk.Button(frame, text="← Back", command=app.show_main_menu, bg=app.BG_CARD, fg=app.TEXT, width=20, height=2).pack(pady=10)
     tk.Button(frame, text="Log Out", command=logout, bg=app.ACCENT, fg=app.TEXT, width=20, height=2).pack(pady=10)
     tk.Button(frame, text="Delete Account", command=delete_account, bg=app.ACCENT, fg=app.TEXT, width=20, height=2).pack(pady=10)
+    tk.Button(frame, text="← Back", command=app.show_main_menu, bg=app.BG_CARD, fg=app.TEXT, width=20, height=2).pack(pady=10)
 
     # EXIT BUTTON
     bind_exit_menu(app)

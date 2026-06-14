@@ -2,10 +2,13 @@ import tkinter as tk
 from datetime import datetime
 from tkinter import messagebox
 from db_files.data_manager import get_user_data, update_user_data
-from system_functions.backend.ui_helpers import create_small_button, bind_exit_menu
+from system_functions.backend.ui_helpers import create_small_button
 
 def show_goal_planner(app):
     app.clear()
+
+    user_data = get_user_data(app.current_user)
+    goals = user_data["goals"]
 
     # OUTER FRAMES
     outer = tk.Frame(app.root, bg=app.BG_MAIN)
@@ -16,24 +19,15 @@ def show_goal_planner(app):
 
     tk.Label(frame, text="Goal Planner", font=("Segoe UI", 26, "bold"), bg=app.BG_CARD, fg=app.TEXT).pack(pady=10)
 
-    user_data = get_user_data(app.current_user)
-    goals = user_data["goals"]
-
     # INPUTS
-    goal_entry, _ = app.create_field(frame, "Goal Title")
-    deadline_entry, _ = app.create_field(frame, "Target Date (YYYY-MM-DD)")
-
-    error_duplicate_name = tk.Label(frame, text="", fg="#ef4444", bg=app.BG_CARD)
-    error_duplicate_name.pack(anchor="w", pady=1)
-
-    error_deadline = tk.Label(frame, text="", fg="#ef4444", bg=app.BG_CARD)
-    error_deadline.pack(anchor="w", pady=1)
+    goal_entry, error_name = app.create_field(frame, "Goal Title")
+    deadline_entry, error_deadline = app.create_field(frame, "Target Date (YYYY-MM-DD)")
 
     # PRIORITY TOGGLE
     priority_var = tk.BooleanVar()
     priority_checkbox = tk.Checkbutton(frame, text="Priority Goal", variable=priority_var, bg=app.BG_CARD, fg=app.TEXT, 
                                        selectcolor=app.BG_CARD, activebackground=app.BG_CARD, activeforeground=app.TEXT)
-    priority_checkbox.pack(anchor="w", pady=10)
+    priority_checkbox.pack(anchor="w", pady=5)
 
     # GOAL LIST
     listbox = tk.Listbox(frame, width=60, height=10)
@@ -42,45 +36,59 @@ def show_goal_planner(app):
     def refresh_list():
         # Refresh the list box with current goals
         listbox.delete(0, tk.END)
-        for g in goals:
-            priority_mark = "❗ " if g["priority"] else ""
-            status = "✓" if g["done"] else "✗"
-            listbox.insert(tk.END, f"{status} {priority_mark}{g['title']} ({g['date']})")
+        for goal in goals:
+            priority_mark = "❗ " if goal["priority"] else ""
+            status = "✓" if goal["done"] else "✗"
+            listbox.insert(tk.END, f"{status} {priority_mark}{goal['title']} ({goal['date']})")
 
     def validate_inputs(event=None):
         # Input validation function to check date format and priority selection before enabling the Add Goal button
         valid = True
 
         # Goal title check
-        if goal_entry.get().strip() == "":
-            error_duplicate_name.config(text="Goal name required")
-            add_btn.config(state="disabled")
-            return
-        
-        # Duplicate goal check (same title, case-insensitive)
         title = goal_entry.get().strip().lower()
+        date = deadline_entry.get().strip()
 
-        for g in goals:
-            if g["title"].strip().lower() == title:
-                error_duplicate_name.config(text="Goal with this name already exists")
-                add_btn.config(state="disabled")
-                return
+        # Clear previous error messages
+        error_name.config(text="")
+        error_deadline.config(text="")
 
-        error_duplicate_name.config(text="")
+        if goal_entry.get().strip() == "":
+            error_name.config(text="Goal name required")
+            valid = False
+
+        else:
+            duplicate_found = False
+
+            for goal in goals:
+                if goal["title"].strip().lower() == title:
+                    duplicate_found = True
+                    break
+
+            if duplicate_found:
+                error_name.config(text="Goal with this name already exists")
+                valid = False
+            else:
+                error_name.config(text="")
 
         # Deadline check
-        date = deadline_entry.get().strip()
         if date == "":
-            error_deadline.config(text="")
+            error_deadline.config(text="Deadline required")
             valid = False
-        elif date < datetime.now().strftime("%Y-%m-%d"):
-            error_deadline.config(text="Deadline cannot be in the past")
-            valid = False
+
         else:
             try:
-                datetime.strptime(date, "%Y-%m-%d")
-                error_deadline.config(text="")
-            except:
+                # Check if the entered date is in the correct format and not in the past
+                # strptime will raise an error if the format is incorrect
+                entered_date = datetime.strptime(date, "%Y-%m-%d").date()
+
+                if entered_date < datetime.now().date():
+                    error_deadline.config(text="Deadline cannot be in the past")
+                    valid = False
+                else:
+                    error_deadline.config(text="")
+
+            except ValueError:
                 error_deadline.config(text="Invalid date (YYYY-MM-DD)")
                 valid = False
 
@@ -88,7 +96,6 @@ def show_goal_planner(app):
 
     def add_goal():
         # Add a new goal to the list after validating inputs, then save to user data and refresh the list box
-
         goal = {
             "title": goal_entry.get(),
             "date": deadline_entry.get(),
@@ -107,7 +114,7 @@ def show_goal_planner(app):
         goal_entry.delete(0, tk.END)
         deadline_entry.delete(0, tk.END)
         priority_var.set(False)
-        error_duplicate_name.config(text="")
+        error_name.config(text="")
         error_deadline.config(text="")
         add_btn.config(state="disabled")
 
@@ -190,18 +197,30 @@ def show_goal_planner(app):
     btn_frame = tk.Frame(frame, bg=app.BG_CARD)
     btn_frame.pack(pady=20)
 
-    # Row 1
     add_btn = create_small_button(btn_frame, "Add Goal", add_goal, app, primary=True)
     add_btn.grid(row=0, column=0, padx=15, pady=15)
     add_btn.config(state="disabled") # Initially disable the add button until valid inputs are provided
     create_small_button(btn_frame, "Edit Goal", edit_goal, app, primary=False).grid(row=0, column=1, padx=15, pady=15)
-
-    # Row 2
     create_small_button(btn_frame, "Mark Complete", complete_goal, app, primary=False).grid(row=1, column=0, padx=15, pady=10)
     create_small_button(btn_frame, "Delete Goal", delete_goal, app, primary=False).grid(row=1, column=1, padx=15, pady=10)
 
-    # Exit button
-    bind_exit_menu(app)
+    # EXIT BUTTON FUNCTIONS
+    def exit_to_trackers_menu(event=None):
+        from system_functions.inner_menus.custom_trackers import show_trackers_menu
+
+        app.root.unbind("<Escape>")
+        show_trackers_menu(app)
+
+    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
+
+    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
+    exit_btn.place(x=30, y=30)
+    exit_btn.lift()
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
+    exit_btn.bind("<Button-1>", exit_to_trackers_menu)
+    app.root.bind("<Escape>", exit_to_trackers_menu)
 
     # Bindings
     goal_entry.bind("<KeyRelease>", validate_inputs)

@@ -13,13 +13,8 @@ def create_small_button(parent, text, command, app, primary=True):
     bg = app.ACCENT if primary else "#22C55E"
     btn = tk.Label(parent, text=text, bg=bg, fg="white", font=("Segoe UI", 12, "bold"), width=18, height=2,cursor="hand2")
 
-    def on_enter(e):
-        # Change button color on hover
-        btn.config(bg="#dc2626" if primary else "#16a34a")
-
-    def on_leave(e):
-        # Revert button color when not hovering
-        btn.config(bg=bg)
+    on_enter = lambda e: btn.config(bg="#dc2626" if primary else "#16a34a")
+    on_leave = lambda e: btn.config(bg=bg)
 
     btn.bind("<Enter>", on_enter)
     btn.bind("<Leave>", on_leave)
@@ -32,11 +27,8 @@ def create_square(app, text, command):
     square = tk.Label(app, text=text, bg=BG_CARD, fg=TEXT, font=("Segoe UI", 14, "bold"), width=20, height=8, cursor="hand2")
 
     # Hover effect to change background color when mouse is over the square
-    def hover_on(e): 
-        square.config(bg="#334155")
-
-    def hover_off(e): 
-        square.config(bg=BG_CARD)
+    hover_on = lambda e: square.config(bg="#334155")
+    hover_off = lambda e: square.config(bg=BG_CARD)
 
     # Bind hover and click events to the square
     square.bind("<Enter>", hover_on)
@@ -57,11 +49,8 @@ def bind_exit_menu(app):
         app.root.unbind("<Escape>")
         app.show_main_menu()
 
-    def hover_on(e): 
-        exit_btn.config(bg=ACCENT_HOVER)
-
-    def hover_off(e): 
-        exit_btn.config(bg=ACCENT)
+    hover_on = lambda e: exit_btn.config(bg=ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=ACCENT)
 
     app.root.bind("<Escape>", exit_to_menu)
     exit_btn.bind("<Enter>", hover_on)
@@ -77,11 +66,8 @@ def bind_exit_home(app):
         app.root.unbind("<Escape>")
         app.show_home()
 
-    def hover_on(e): 
-        exit_btn.config(bg=ACCENT_HOVER)
-
-    def hover_off(e): 
-        exit_btn.config(bg=ACCENT)
+    hover_on = lambda e: exit_btn.config(bg=ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=ACCENT)
 
     app.root.bind("<Escape>", exit_to_home)
     exit_btn.bind("<Enter>", hover_on)

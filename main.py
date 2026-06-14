@@ -8,22 +8,22 @@ from PIL import Image, ImageTk      # Logo
 import pygame                       # Music player + playlist system (Using Pygame since Tkinter does not support music functionality natively)
 
 # INTEGRATION OF FUNCTIONALITY MODULES
-from system_functions.task_tracker import show_task_tracker                      # Task Tracker module
-from system_functions.goal_planner import show_goal_planner                      # Goal Planner module
 from system_functions.user_profile_dashboard import show_profile_menu            # User Profile Dashboard module
+from system_functions.streak_menu import show_streak_menu                        # Streak Tracking module
 from system_functions.registration_login_systems import *                        # Registration & Login systems
 from system_functions.music_system.music_settings import show_music_player       # Music Player module
+from system_functions.notebook import show_notebook                              # Digital Notebook module
 from system_functions.calendar.calendar_view import show_calendar                # Calendar + Reminders systems
 from system_functions.flashcards.flashcards_main import show_flashcards          # Flashcards module
 from system_functions.pomodoro_timer import show_pomodoro_timer                  # Pomodoro Timer module
 from system_functions.backend.ui_helpers import *                                # Import everything from UI helpers module
 
+from system_functions.inner_menus.custom_trackers import show_trackers_menu      # Custom Trackers Menu
 from system_functions.inner_menus.skill_training_menu import show_skill_menu     # Skill Training Menu
 from system_functions.inner_menus.express_yourself_menu import show_express_menu # Express Yourself Menu
 
 # UTILITY FUNCTION TO CREATE STYLED INPUT FIELDS WITH LABELS AND ERROR MESSAGES
 def create_field(parent, label, is_password=False):
-
     # Field label (aligned to the left)
     tk.Label(parent, text=label, bg=BG_CARD, fg=TEXT).pack(anchor="w")
 
@@ -35,11 +35,9 @@ def create_field(parent, label, is_password=False):
     # Input field with padding and expansion to fill available space
     entry = tk.Entry(wrapper, bg=INPUT_BG, fg=TEXT, insertbackground="white", relief="flat", font=("Segoe UI", 12),
                      highlightbackground=TEXT, highlightthickness=1, width=45, show="*" if is_password else "")
-
     entry.pack(side="left", fill="x", expand=True, ipadx=10)
 
     if is_password:
-
         # If this is a password field, add a toggle button to show/hide the password
         def toggle():
             # Toggle between showing and hiding the password characters
@@ -49,7 +47,7 @@ def create_field(parent, label, is_password=False):
         tk.Button(wrapper, text="👁", command=toggle, bg="#334155", fg=TEXT, relief="flat", width=4).pack(side="right", padx=5)
 
     error = tk.Label(parent, text="", fg="#ef4444", bg=BG_CARD, font=("Arial", 8))
-    error.pack(anchor="w", pady=(0, 2))
+    error.pack(anchor="w", pady=(5, 15))
 
     # Return the entry widget and the error label for validation feedback
     return entry, error
@@ -59,16 +57,11 @@ def create_button(parent, text, command, primary=True):
     bg = ACCENT if primary else BG_CARD # Primary buttons are red, secondary are card-colored
     btn = tk.Label(parent, text=text, bg=bg, fg="white", font=("Segoe UI", 16, "bold"), width=22, height=2, cursor="hand2")
 
-    def on_enter(e): 
-        # Change background on cursor hover (darker red for primary, slightly lighter for secondary)
-        btn.config(bg=ACCENT_HOVER if primary else "#334155")
+    hover_on = lambda e: btn.config(bg=ACCENT_HOVER if primary else "#334155") # Change background on hover
+    hover_off = lambda e: btn.config(bg=bg)
 
-    def on_leave(e): 
-        # Revert background when cursor is not hovering
-        btn.config(bg=bg)
-
-    btn.bind("<Enter>", on_enter) # Bind hover events to change button color
-    btn.bind("<Leave>", on_leave) # Bind leave event to revert button color
+    btn.bind("<Enter>", hover_on) # Bind hover events to change button color
+    btn.bind("<Leave>", hover_off) # Bind leave event to revert button color
     btn.bind("<Button-1>", lambda e: command()) # Bind click event to execute the provided command function
 
     return btn # Return the styled button widget
@@ -78,18 +71,20 @@ class StudyZoneApp:
     def __init__(self, root):
         # Initialize the main application class, set up the root window, and show the home screen
         self.current_user = None
-        
-        # Fullscreen but keeps taskbar & buttons
         self.root = root
         self.root.title("StudyZone")
         self.root.state("zoomed")
         self.root.configure(bg="#111111")
 
-        # Set up color scheme and utility functions as instance variables for easy access in other modules
+        # Colour scheme initialization
         self.BG_MAIN = BG_MAIN
         self.BG_CARD = BG_CARD
         self.ACCENT = ACCENT
+        self.ACCENT_HOVER = ACCENT_HOVER
         self.TEXT = TEXT
+        self.SUBTLE = SUBTLE
+
+        # UI helper functions
         self.create_field = create_field
         self.create_square = create_square
         self.say_hello = ["Welcome to StudyZone", "Hello", "Nice to meet you", "Hey there"]
@@ -164,6 +159,7 @@ class StudyZoneApp:
 
         # Log in directly
         self.current_user = username
+        update_login_streak(username)
         self.show_main_menu()
         self.play_music()
 
@@ -249,8 +245,8 @@ class StudyZoneApp:
         self.root.bind("<Escape>", confirm_exit)
 
         # MAIN MENU SQUARES
-        create_square(grid, "Task Tracker", lambda: show_task_tracker(self)).grid(row=0, column=1, padx=20, pady=20)
-        create_square(grid, "Goal Planner", lambda: show_goal_planner(self)).grid(row=0, column=2, padx=20, pady=20)
+        create_square(grid, "Custom Trackers", lambda: show_trackers_menu(self)).grid(row=0, column=1, padx=20, pady=20)
+        create_square(grid, "Digital Notebook", lambda: show_notebook(self)).grid(row=0, column=2, padx=20, pady=20)
         create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
         create_square(grid, "Flashcards", lambda: show_flashcards(self)).grid(row=0, column=4, padx=20, pady=20)
         create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=0, column=5, padx=20, pady=20)
@@ -260,36 +256,41 @@ class StudyZoneApp:
         # MUSIC PLAYER BUTTON
         canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
         canvas1.place(relx=0.97, rely=0.83, anchor="se")
-
         canvas1.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
         canvas1.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
-
-        def open_music_player(event=None):
-            show_music_player(self)
 
         hover_on = lambda e: canvas1.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
         hover_off = lambda e: canvas1.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
 
         canvas1.bind("<Enter>", hover_on)
         canvas1.bind("<Leave>", hover_off)
-        canvas1.bind("<Button-1>", open_music_player)
+        canvas1.bind("<Button-1>", lambda e: show_music_player(self))
 
         # USER PROFILE BUTTON
         canvas2 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
         canvas2.place(relx=0.97, rely=0.95, anchor="se")
-
         canvas2.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
         canvas2.create_text(54, 50, text="👤", fill="white", font=("Segoe UI", 30))
-
-        def open_profile(event=None):
-            show_profile_menu(self)
 
         hover_on = lambda e: canvas2.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
         hover_off = lambda e: canvas2.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
 
         canvas2.bind("<Enter>", hover_on)
         canvas2.bind("<Leave>", hover_off)
-        canvas2.bind("<Button-1>", open_profile)
+        canvas2.bind("<Button-1>", lambda e: show_profile_menu(self))
+
+        # STREAK BUTTON
+        canvas3 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas3.place(relx=0.97, rely=0.71, anchor="se")
+        canvas3.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas3.create_text(50, 50, text="🔥", fill="white", font=("Segoe UI", 30))
+
+        hover_on = lambda e: canvas3.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
+        hover_off = lambda e: canvas3.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
+
+        canvas3.bind("<Enter>", hover_on)
+        canvas3.bind("<Leave>", hover_off)
+        canvas3.bind("<Button-1>", lambda e: show_streak_menu(self))
 
 # RUN APP
 root = tk.Tk()

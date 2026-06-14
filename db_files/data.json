@@ -2,29 +2,18 @@
     "StudyDev": {
         "tasks": [],
         "goals": [],
+        "habits": [],
         "events": [],
         "flashcards": [],
+        "sticky_notes": [],
+        "journal_entries": [],
         "aim_trainer": {
             "high_score": 0,
             "games_played": 0,
             "best_accuracy": 0
         },
         "reaction_trainer": {
-            "best_time": 0
-        },
-        "sticky_notes": [],
-        "journal_entries": [
-            {
-                "title": "Test",
-                "weather": "",
-                "emotion": "",
-                "content": "e",
-                "date": "30 May 2026"
-            }
-        ],
-        "typing_test": {
-            "best_wpm": 32,
-            "best_accuracy": 100
+            "best_time": 285
         }
     }
 }
