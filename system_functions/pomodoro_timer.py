@@ -145,7 +145,6 @@ def show_pomodoro_timer(app):
 
             minutes = time_left // 60
             seconds = time_left % 60
-
             timer_label.configure(text=f"{minutes:02d}:{seconds:02d}")
 
     # ------------------ Buttons ------------------

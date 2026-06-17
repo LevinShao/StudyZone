@@ -16,6 +16,8 @@ from system_functions.notebook import show_notebook                             
 from system_functions.calendar.calendar_view import show_calendar                # Calendar + Reminders systems
 from system_functions.flashcards.flashcards_main import show_flashcards          # Flashcards module
 from system_functions.pomodoro_timer import show_pomodoro_timer                  # Pomodoro Timer module
+from system_functions.file_storage import show_file_storage
+from system_functions.support import show_support_menu
 from system_functions.backend.ui_helpers import *                                # Import everything from UI helpers module
 
 from system_functions.inner_menus.custom_trackers import show_trackers_menu      # Custom Trackers Menu
@@ -252,19 +254,7 @@ class StudyZoneApp:
         create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=0, column=5, padx=20, pady=20)
         create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=1, column=1, padx=20, pady=50)
         create_square(grid, "Express Yourself", lambda: show_express_menu(self)).grid(row=1, column=2, padx=20, pady=50)
-
-        # MUSIC PLAYER BUTTON
-        canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas1.place(relx=0.97, rely=0.83, anchor="se")
-        canvas1.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas1.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
-
-        hover_on = lambda e: canvas1.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
-        hover_off = lambda e: canvas1.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
-
-        canvas1.bind("<Enter>", hover_on)
-        canvas1.bind("<Leave>", hover_off)
-        canvas1.bind("<Button-1>", lambda e: show_music_player(self))
+        create_square(grid, "File Storage", lambda: show_file_storage(self)).grid(row=1, column=3, padx=20, pady=50)
 
         # USER PROFILE BUTTON
         canvas2 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
@@ -279,6 +269,19 @@ class StudyZoneApp:
         canvas2.bind("<Leave>", hover_off)
         canvas2.bind("<Button-1>", lambda e: show_profile_menu(self))
 
+        # MUSIC PLAYER BUTTON
+        canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas1.place(relx=0.97, rely=0.83, anchor="se")
+        canvas1.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas1.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
+
+        hover_on = lambda e: canvas1.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
+        hover_off = lambda e: canvas1.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
+
+        canvas1.bind("<Enter>", hover_on)
+        canvas1.bind("<Leave>", hover_off)
+        canvas1.bind("<Button-1>", lambda e: show_music_player(self))
+
         # STREAK BUTTON
         canvas3 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
         canvas3.place(relx=0.97, rely=0.71, anchor="se")
@@ -291,6 +294,19 @@ class StudyZoneApp:
         canvas3.bind("<Enter>", hover_on)
         canvas3.bind("<Leave>", hover_off)
         canvas3.bind("<Button-1>", lambda e: show_streak_menu(self))
+
+        # SUPPORT BUTTON
+        canvas4 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas4.place(relx=0.03, rely=0.95, anchor="sw")
+        canvas4.create_rectangle(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas4.create_text(50, 50, text="📩", fill="white", font=("Segoe UI", 30))
+
+        hover_on = lambda e: canvas4.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
+        hover_off = lambda e: canvas4.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
+
+        canvas4.bind("<Enter>", hover_on)
+        canvas4.bind("<Leave>", hover_off)
+        canvas4.bind("<Button-1>", lambda e: show_support_menu(self))
 
 # RUN APP
 root = tk.Tk()

@@ -159,22 +159,21 @@ def art(app):
     redo_btn.pack(side="left", padx=5)
 
     # Main Hover Effects
-    def undo_hover_on(e):
+    def undo_hover_on(e): 
         undo_btn.config(bg="#4b5563")
-
+        
     def undo_hover_off(e):
         undo_btn.config(bg="#374151")
 
-    def redo_hover_on(e):
+    def redo_hover_on(e): 
         redo_btn.config(bg="#4b5563")
 
-    def redo_hover_off(e):
+    def redo_hover_off(e): 
         redo_btn.config(bg="#374151")
 
     undo_btn.bind("<Enter>", undo_hover_on)
     undo_btn.bind("<Leave>", undo_hover_off)
     undo_btn.bind("<Button-1>", lambda e: undo())
-
     redo_btn.bind("<Enter>", redo_hover_on)
     redo_btn.bind("<Leave>", redo_hover_off)
     redo_btn.bind("<Button-1>", lambda e: redo())
