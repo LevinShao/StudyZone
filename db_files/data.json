@@ -3,6 +3,29 @@
         "tasks": [],
         "goals": [],
         "habits": [],
+        "notebook": [
+            {
+                "title": "test",
+                "category": "Biology",
+                "content": "222",
+                "date_created": "18 June 2026",
+                "last_modified": "18 June 2026"
+            },
+            {
+                "title": "222",
+                "category": "Study Tips",
+                "content": "2",
+                "date_created": "18 June 2026",
+                "last_modified": "18 June 2026"
+            },
+            {
+                "title": "1",
+                "category": "Other",
+                "content": "22",
+                "date_created": "18 June 2026",
+                "last_modified": "18 June 2026"
+            }
+        ],
         "events": [],
         "flashcards": [],
         "sticky_notes": [],
@@ -13,7 +36,7 @@
             "best_accuracy": 0
         },
         "reaction_trainer": {
-            "best_time": 285
+            "best_time": 220
         }
     }
 }

@@ -37,9 +37,8 @@ def show_task_tracker(app):
         "5 - Casual": "5"
     }
 
-    selected_priority = tk.StringVar()
-    selected_priority.set("")
-
+    selected_priority = tk.StringVar(value="") # use stringvar to store the selected priority
+    selected_priority.set("") # Set default priority to empty string
     priority_dropdown = ttk.Combobox(frame, textvariable=selected_priority, values=list(priority_options.keys()), state="readonly")
     priority_dropdown.pack(fill="x", pady=10)
 
@@ -172,14 +171,14 @@ def show_task_tracker(app):
         deadline_entry_popup.pack(pady=5)
 
         priority_var = tk.StringVar()
-        priority_options = list(priority_options.keys())
+        priority_dropdown_values = list(priority_options.keys())
 
-        # set current priority
+        # set current priority in dropdown dropdown_values
         for key, val in priority_options.items():
             if val == task["priority"]:
                 priority_var.set(key)
 
-        priority_dropdown_popup = ttk.Combobox(edit_win, textvariable=priority_var, values=priority_options, state="readonly")
+        priority_dropdown_popup = ttk.Combobox(edit_win, textvariable=priority_var, values=priority_dropdown_values, state="readonly")
         priority_dropdown_popup.pack(pady=5)
 
         def save_changes(): 

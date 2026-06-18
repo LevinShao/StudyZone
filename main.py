@@ -12,12 +12,12 @@ from system_functions.user_profile_dashboard import show_profile_menu           
 from system_functions.streak_menu import show_streak_menu                        # Streak Tracking module
 from system_functions.registration_login_systems import *                        # Registration & Login systems
 from system_functions.music_system.music_settings import show_music_player       # Music Player module
-from system_functions.notebook import show_notebook                              # Digital Notebook module
+from system_functions.notebook.create_new_page import create_new_page            # Digital Notebook module
 from system_functions.calendar.calendar_view import show_calendar                # Calendar + Reminders systems
 from system_functions.flashcards.flashcards_main import show_flashcards          # Flashcards module
 from system_functions.pomodoro_timer import show_pomodoro_timer                  # Pomodoro Timer module
-from system_functions.file_storage import show_file_storage
-from system_functions.support import show_support_menu
+from system_functions.file_storage import show_file_storage                      # File Storage module
+from system_functions.support import show_support_menu                           # Support module (not currently developed)
 from system_functions.backend.ui_helpers import *                                # Import everything from UI helpers module
 
 from system_functions.inner_menus.custom_trackers import show_trackers_menu      # Custom Trackers Menu
@@ -240,7 +240,7 @@ class StudyZoneApp:
         
         def confirm_exit(event=None):
             # Exit confirmation popup when user presses Escape key in the main menu
-            response = messagebox.askyesno("Exit", "Do you want to close StudyZone?")
+            response = messagebox.askyesno("Exit", "Are you sure you want to close StudyZone?")
             if response:
                 self.root.destroy() # Self-destruct upon confirmation
 
@@ -248,7 +248,7 @@ class StudyZoneApp:
 
         # MAIN MENU SQUARES
         create_square(grid, "Custom Trackers", lambda: show_trackers_menu(self)).grid(row=0, column=1, padx=20, pady=20)
-        create_square(grid, "Digital Notebook", lambda: show_notebook(self)).grid(row=0, column=2, padx=20, pady=20)
+        create_square(grid, "Digital Notebook", lambda: create_new_page(self)).grid(row=0, column=2, padx=20, pady=20)
         create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
         create_square(grid, "Flashcards", lambda: show_flashcards(self)).grid(row=0, column=4, padx=20, pady=20)
         create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=0, column=5, padx=20, pady=20)
@@ -298,8 +298,7 @@ class StudyZoneApp:
         # SUPPORT BUTTON
         canvas4 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
         canvas4.place(relx=0.03, rely=0.95, anchor="sw")
-        canvas4.create_rectangle(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas4.create_text(50, 50, text="📩", fill="white", font=("Segoe UI", 30))
+        canvas4.create_text(50, 50, text="📩", fill=ACCENT, font=("Segoe UI", 30))
 
         hover_on = lambda e: canvas4.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
         hover_off = lambda e: canvas4.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
