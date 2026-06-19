@@ -73,3 +73,30 @@ def bind_exit_home(app):
     exit_btn.bind("<Enter>", hover_on)
     exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", lambda e: app.show_home())
+
+def create_scrollable_page(root, bg):
+    # This is a debugging tool used to fix issues with StudyZone display when users use the app on computers with extremely small screens
+    canvas = tk.Canvas(root, bg=bg, highlightthickness=0) # Create a canvas widget to hold the scrollable frame
+
+    def _on_mousewheel(event):
+        # Check if the canvas widget still exists in the DOM because sometimes it gets destroyed
+        if canvas.winfo_exists():
+            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units") # Scroll the canvas up or down based on the mouse wheel delta
+
+    # Add a scrollbar to the canvas to allow vertical scrolling
+    scrollbar = tk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    scrollable_frame = tk.Frame(canvas, bg=bg)
+    scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))) # Update the scroll region when the scrollable frame changes size
+
+    window = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw") # Create a window to hold the scrollable frame
+
+    def resize(event):
+        # Update the window width when the canvas changes size
+        canvas.itemconfigure(window, width=event.width)
+
+    canvas.bind("<Configure>", resize)
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.pack(side="left", fill="both", expand=True)
+
+    return scrollable_frame, canvas # Return the scrollable frame and canvas widget

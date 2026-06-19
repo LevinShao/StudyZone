@@ -129,7 +129,7 @@ def show_habit_tracker(app):
 
     # EXIT BUTTON FUNCTIONS
     def exit_to_trackers_menu(event=None):
-        from system_functions.inner_menus.custom_trackers import show_trackers_menu
+        from system_functions.inner_menus.productivity import show_trackers_menu
 
         app.root.unbind("<Escape>")
         show_trackers_menu(app)

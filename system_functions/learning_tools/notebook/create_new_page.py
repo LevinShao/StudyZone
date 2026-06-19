@@ -13,8 +13,7 @@ def create_new_page(app):
     notebook = user_data["notebook"]
     categories = ["Mathematics", "English", "Physics", "Chemistry", "Biology", "Economics", "Engineering", "Software", "Study Tips", "Personal", "Other"]
 
-    container = tk.Frame(app.root, bg=BG_MAIN)
-    container.pack(fill="both", expand=True)
+    container, canvas = create_scrollable_page(app.root, BG_MAIN)
 
     tk.Label(container, text="Digital Notebook", font=("Segoe UI", 28, "bold"), fg=TEXT, bg=BG_MAIN).pack(pady=30)
 
@@ -57,7 +56,6 @@ def create_new_page(app):
 
         if title == "" and content == "": 
             # at minimum, there should be a title or some content to save an entry
-            # Weather, temperature, and emotion can be left blank if the user doesn't want to fill them out
             return
 
         # Append the new entry to the user's journal entries and update the user data

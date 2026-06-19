@@ -1,8 +1,7 @@
-# WILL WORK ON THIS LATER
 import tkinter as tk
 from system_functions.backend.ui_helpers import *
 
-def coming_soon3(app):
+def show_forums(app):
     app.clear()
 
     # Mainframe

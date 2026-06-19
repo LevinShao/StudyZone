@@ -169,7 +169,6 @@ def show_aim_trainer(app):
             aim_data["best_accuracy"] = accuracy
 
         aim_data["games_played"] += 1
-
         update_user_data(app.current_user, user_data)
 
         # Summary Screen
@@ -192,7 +191,6 @@ def show_aim_trainer(app):
         from system_functions.inner_menus.skill_training_menu import show_skill_menu
 
         nonlocal running
-
         running = False
 
         try:
@@ -207,9 +205,14 @@ def show_aim_trainer(app):
         app.root.unbind("<Escape>")
         show_skill_menu(app)
 
+    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
+
     exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
     exit_btn.place(x=30, y=30)
     exit_btn.lift()
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", exit_to_skill_menu)
     app.root.bind("<Escape>", exit_to_skill_menu)
 

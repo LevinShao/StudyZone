@@ -148,7 +148,16 @@ def show_day_view(app, year, month, day):
     listbox.bind("<Double-Button-1>", view_event_details) # Bind double-click to view event details
 
     exit_btn = tk.Label(app.root, text="←", fg="white", bg="#ef4444", font=("Segoe UI", 18, "bold"), cursor="hand2")
+    exit_btn.place(x=30, y=30)    
+    
+    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
+
+    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
     exit_btn.place(x=30, y=30)
+    exit_btn.lift()
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", exit_to_calendar)
 
     # Button Frame

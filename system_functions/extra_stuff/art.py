@@ -197,13 +197,18 @@ def art(app):
 
     # Exit Button
     def exit_to_express_menu(event=None):
-        from system_functions.inner_menus.express_yourself_menu import show_express_menu
+        from system_functions.inner_menus.extra_tools import show_extra_stuff
 
         app.root.unbind("<Escape>")
-        show_express_menu(app)
+        show_extra_stuff(app)
+
+    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
 
     exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
     exit_btn.place(x=30, y=30)
     exit_btn.lift()
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", exit_to_express_menu)
     app.root.bind("<Escape>", exit_to_express_menu)

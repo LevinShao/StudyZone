@@ -1,8 +1,9 @@
-# WILL WORK ON THIS LATER
+# AI ASSISTANT IDEA FOR STUDYZONE
+# WILL WORK SIMILAR TO CHATGPT OR AT LEAST I HOPE SO
 import tkinter as tk
 from system_functions.backend.ui_helpers import *
 
-def coming_soon2(app):
+def show_ai(app):
     app.clear()
 
     # Mainframe

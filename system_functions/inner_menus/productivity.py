@@ -11,7 +11,7 @@ def show_trackers_menu(app):
     container = tk.Frame(app.root, bg=BG_MAIN)
     container.pack(fill="both", expand=True)
 
-    tk.Label(container, text="Welcome to the Custom Trackers Menu.", font=("Segoe UI", 22, "bold"), fg=TEXT, bg=BG_MAIN).pack(pady=100)
+    tk.Label(container, text="Welcome to the Productivity Trackers Menu.", font=("Segoe UI", 22, "bold"), fg=TEXT, bg=BG_MAIN).pack(pady=100)
 
     # TOOL GRID
     grid = tk.Frame(container, bg=BG_MAIN)
