@@ -178,7 +178,7 @@ def user_registration(self):
         self.play_music()
 
     # Buttons (submit button starts disabled and only enables when all fields are valid)
-    submit_btn = tk.Button(frame, text="Submit", state="disabled", command=submit, bg=self.ACCENT, fg=self.TEXT, width=20, height=2)
+    submit_btn = tk.Button(frame, text="Register", state="disabled", command=submit, bg=self.ACCENT, fg=self.TEXT, width=20, height=2)
     submit_btn.pack(pady=10)
     tk.Button(frame, text="← Back", command=self.show_home, bg=self.BG_CARD, fg=self.TEXT, width=20, height=2).pack(pady=10)
 

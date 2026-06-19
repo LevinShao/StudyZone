@@ -87,7 +87,7 @@ def review_flashcards(app, flashcards):
     # Exit Review Function
     def exit_review(event=None):
         # Import inside of function to prevent circular import error
-        from system_functions.flashcards.flashcards_main import show_flashcards
+        from system_functions.learning_tools.flashcards.flashcards_main import show_flashcards
 
         # Unbind the Escape key to prevent it from triggering the review menu's exit function
         app.root.unbind("<Escape>")

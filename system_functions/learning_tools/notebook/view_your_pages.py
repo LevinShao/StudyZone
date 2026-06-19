@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from system_functions.backend.ui_helpers import *
 from db_files.data_manager import get_user_data
-from system_functions.notebook.open_page import open_notebook_page
+from system_functions.learning_tools.notebook.open_page import open_notebook_page
 
 def show_notebook_pages(app):
     app.clear()
@@ -76,14 +76,19 @@ def show_notebook_pages(app):
 
     # Exit Button
     def exit_to_create_menu(event=None):
-        from system_functions.notebook.create_new_page import create_new_page
+        from system_functions.learning_tools.notebook.create_new_page import create_new_page
 
         app.root.unbind("<Escape>")
         create_new_page(app)
 
+    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
+
     exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
     exit_btn.place(x=30, y=30)
     exit_btn.lift()
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", exit_to_create_menu)
     app.root.bind("<Escape>", exit_to_create_menu)
 

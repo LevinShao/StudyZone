@@ -12,15 +12,17 @@ from system_functions.user_profile_dashboard import show_profile_menu           
 from system_functions.streak_menu import show_streak_menu                        # Streak Tracking module
 from system_functions.registration_login_systems import *                        # Registration & Login systems
 from system_functions.music_system.music_settings import show_music_player       # Music Player module
-from system_functions.notebook.create_new_page import create_new_page            # Digital Notebook module
 from system_functions.calendar.calendar_view import show_calendar                # Calendar + Reminders systems
-from system_functions.flashcards.flashcards_main import show_flashcards          # Flashcards module
 from system_functions.pomodoro_timer import show_pomodoro_timer                  # Pomodoro Timer module
 from system_functions.file_storage import show_file_storage                      # File Storage module
 from system_functions.support import show_support_menu                           # Support module (not currently developed)
+from system_functions.mindfulness import coming_soon1                            # Future Mindfulness module
+from system_functions.coming_soon2 import coming_soon2                           # TBD (Was originally planned to be the area where you view your progress but I decided to merge it with the user profile dashboard instead)
+from system_functions.coming_soon3 import coming_soon3                           # Will be an area where you can access tools for fun in the future
 from system_functions.backend.ui_helpers import *                                # Import everything from UI helpers module
 
 from system_functions.inner_menus.custom_trackers import show_trackers_menu      # Custom Trackers Menu
+from system_functions.inner_menus.learning_tools import show_studymenu           # Show StudyMenu
 from system_functions.inner_menus.skill_training_menu import show_skill_menu     # Skill Training Menu
 from system_functions.inner_menus.express_yourself_menu import show_express_menu # Express Yourself Menu
 
@@ -138,7 +140,7 @@ class StudyZoneApp:
             print("Music file missing:", self.current_song)
 
     def dev_login(self):
-        # Deverloper mode for quick access without registration/login during development
+        # Developer mode for quick access without registration/login during development
         # Will be remade into an app help guide in the future
         username = "StudyDev"
 
@@ -248,13 +250,15 @@ class StudyZoneApp:
 
         # MAIN MENU SQUARES
         create_square(grid, "Custom Trackers", lambda: show_trackers_menu(self)).grid(row=0, column=1, padx=20, pady=20)
-        create_square(grid, "Digital Notebook", lambda: create_new_page(self)).grid(row=0, column=2, padx=20, pady=20)
+        create_square(grid, "Learning Tools", lambda: show_studymenu(self)).grid(row=0, column=2, padx=20, pady=20)
         create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
-        create_square(grid, "Flashcards", lambda: show_flashcards(self)).grid(row=0, column=4, padx=20, pady=20)
-        create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=0, column=5, padx=20, pady=20)
-        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=1, column=1, padx=20, pady=50)
-        create_square(grid, "Express Yourself", lambda: show_express_menu(self)).grid(row=1, column=2, padx=20, pady=50)
-        create_square(grid, "File Storage", lambda: show_file_storage(self)).grid(row=1, column=3, padx=20, pady=50)
+        create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=0, column=4, padx=20, pady=20)
+        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=5, padx=20, pady=20)
+        create_square(grid, "Express Yourself", lambda: show_express_menu(self)).grid(row=1, column=1, padx=20, pady=50)
+        create_square(grid, "File Storage", lambda: show_file_storage(self)).grid(row=1, column=2, padx=20, pady=50)
+        create_square(grid, "Mindfulness", lambda: coming_soon1(self)).grid(row=1, column=3, padx=20, pady=50)
+        create_square(grid, "Coming Soon!", lambda: coming_soon2(self)).grid(row=1, column=4, padx=20, pady=50)
+        create_square(grid, "Coming Soon!", lambda: coming_soon3(self)).grid(row=1, column=5, padx=20, pady=50)
 
         # USER PROFILE BUTTON
         canvas2 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
