@@ -8,23 +8,24 @@ from PIL import Image, ImageTk      # Logo
 import pygame                       # Music player + playlist system (Using Pygame since Tkinter does not support music functionality natively)
 
 # INTEGRATION OF FUNCTIONALITY MODULES
-from system_functions.user_profile_dashboard import show_profile_menu            # User Profile Dashboard module
-from system_functions.streak_menu import show_streak_menu                        # Streak Tracking module
-from system_functions.registration_login_systems import *                        # Registration & Login systems
-from system_functions.music_system.music_settings import show_music_player       # Music Player module
-from system_functions.calendar.calendar_view import show_calendar                # Calendar + Reminders systems
-from system_functions.pomodoro_timer import show_pomodoro_timer                  # Pomodoro Timer module
-from system_functions.file_storage import show_file_storage                      # File Storage module
-from system_functions.support import show_support_menu                           # Support module (not currently developed)
-from system_functions.mindfulness import coming_soon1                            # Future Mindfulness module
-from system_functions.forums import show_forums                                  # StudyZone Forums module (WIP)
-from system_functions.studybuddy import show_ai                                  # AI Assistant for StudyZone (I might never be able to make this)
-from system_functions.backend.ui_helpers import *                                # Import everything from UI helpers module
+from system_functions.backend.ui_helpers import *                                      # Import everything from UI helpers module
+from system_functions.registration_login_systems import *                              # Registration & Login systems
+from system_functions.support import show_support_menu                                 # SIDEBAR 1: Support module (not currently developed)
 
-from system_functions.inner_menus.productivity import show_trackers_menu         # Productivity Menu with Custom Trackers
-from system_functions.inner_menus.learning_tools import show_studymenu           # Show StudyMenu
-from system_functions.inner_menus.skill_training_menu import show_skill_menu     # Skill Training Menu
-from system_functions.inner_menus.extra_tools import show_extra_stuff
+from system_functions.ovals.user_profile_dashboard import show_profile_menu            # OVAL 1: User Profile Dashboard module
+from system_functions.ovals.music_system.music_settings import show_music_player       # OVAL 2: Music Player module
+from system_functions.ovals.streak_menu import show_streak_menu                        # OVAL 3: Streak Tracking module
+
+from system_functions.squares.inner_menus.productivity import show_trackers_menu       # SQUARE 1: Productivity Menu with Custom Trackers
+from system_functions.squares.inner_menus.study_tools import show_studymenu            # SQUARE 2: StudyMenu
+from system_functions.squares.calendar.calendar_view import show_calendar              # SQUARE 3: Calendar + Reminders systems
+from system_functions.squares.inner_menus.creativity import show_creativity_realm      # SQUARE 4: The Realm of Creativity
+from system_functions.squares.inner_menus.skill_training_menu import show_skill_menu   # SQUARE 5: Skill Training Menu
+from system_functions.squares.forums import show_forums                                # SQUARE 6: StudyZone Forums module (WIP)
+from system_functions.squares.file_storage import show_file_storage                    # SQUARE 7: File Storage module
+from system_functions.squares.inner_menus.mindfulness import show_mindfulness          # SQUARE 8: Mindfulness module
+from system_functions.squares.studybuddy import show_ai                                # SQUARE 9: AI Assistant for StudyZone (I might never be able to make this)
+from system_functions.squares.inner_menus.utilities import show_utilities              # SQUARE 10: UTILITIES!!
 
 # UTILITY FUNCTION TO CREATE STYLED INPUT FIELDS WITH LABELS AND ERROR MESSAGES
 def create_field(parent, label, is_password=False):
@@ -98,8 +99,8 @@ class StudyZoneApp:
         pygame.mixer.init()
 
         # Default music settings
-        self.current_song = "system_functions/music_system/Creo - Flow.mp3"
-        self.playlist = ["system_functions/music_system/Creo - Flow.mp3"]
+        self.current_song = "system_functions/ovals/music_system/Creo - Flow.mp3"
+        self.playlist = ["system_functions/ovals/music_system/Creo - Flow.mp3"]
         self.volume = 0.5
 
         pygame.mixer.music.set_volume(self.volume)
@@ -226,7 +227,7 @@ class StudyZoneApp:
 
         # Welcome Message with dynamic emoji based on time of day
         welcome_frame = tk.Frame(container, bg=BG_MAIN)
-        welcome_frame.pack(pady=(60, 45))
+        welcome_frame.pack(pady=(80, 60))
 
         # Use grid layout for welcome message to allow emoji and text to be aligned nicely
         row_frame = tk.Frame(welcome_frame, bg=BG_MAIN)
@@ -249,42 +250,42 @@ class StudyZoneApp:
         self.root.bind("<Escape>", confirm_exit)
 
         # MAIN MENU SQUARES
-        create_square(grid, "Productivity", lambda: show_trackers_menu(self)).grid(row=0, column=1, padx=20, pady=20)
-        create_square(grid, "Learning Tools", lambda: show_studymenu(self)).grid(row=0, column=2, padx=20, pady=20)
-        create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)
-        create_square(grid, "Pomodoro Timer", lambda: show_pomodoro_timer(self)).grid(row=0, column=4, padx=20, pady=20)
-        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=5, padx=20, pady=20)
-        create_square(grid, "StudyZone Forums", lambda: show_forums(self)).grid(row=1, column=1, padx=20, pady=50)
-        create_square(grid, "File Storage", lambda: show_file_storage(self)).grid(row=1, column=2, padx=20, pady=50)
-        create_square(grid, "Mindfulness", lambda: coming_soon1(self)).grid(row=1, column=3, padx=20, pady=50)
-        create_square(grid, "StudyBuddy", lambda: show_ai(self)).grid(row=1, column=4, padx=20, pady=50)
-        create_square(grid, "Useful Stuff", lambda: show_extra_stuff(self)).grid(row=1, column=5, padx=20, pady=50)
+        create_square(grid, "Productivity", lambda: show_trackers_menu(self)).grid(row=0, column=1, padx=20, pady=20)   # SQUARE 1
+        create_square(grid, "Study Tools", lambda: show_studymenu(self)).grid(row=0, column=2, padx=20, pady=20)        # SQUARE 2
+        create_square(grid, "Calendar", lambda: show_calendar(self)).grid(row=0, column=3, padx=20, pady=20)            # SQUARE 3
+        create_square(grid, "Creativity", lambda: show_creativity_realm(self)).grid(row=0, column=4, padx=20, pady=20)  # SQUARE 4
+        create_square(grid, "Skill Trainers", lambda: show_skill_menu(self)).grid(row=0, column=5, padx=20, pady=20)    # SQUARE 5
+        create_square(grid, "StudyZone Forums", lambda: show_forums(self)).grid(row=1, column=1, padx=20, pady=50)      # SQUARE 6
+        create_square(grid, "Resources", lambda: show_file_storage(self)).grid(row=1, column=2, padx=20, pady=50)       # SQUARE 7
+        create_square(grid, "Mindfulness", lambda: show_mindfulness(self)).grid(row=1, column=3, padx=20, pady=50)      # SQUARE 8
+        create_square(grid, "StudyBuddy", lambda: show_ai(self)).grid(row=1, column=4, padx=20, pady=50)                # SQUARE 9
+        create_square(grid, "Utilities", lambda: show_utilities(self)).grid(row=1, column=5, padx=20, pady=50)          # SQUARE 10
 
         # USER PROFILE BUTTON
-        canvas2 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas2.place(relx=0.97, rely=0.95, anchor="se")
-        canvas2.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas2.create_text(54, 50, text="👤", fill="white", font=("Segoe UI", 30))
-
-        hover_on = lambda e: canvas2.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
-        hover_off = lambda e: canvas2.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
-
-        canvas2.bind("<Enter>", hover_on)
-        canvas2.bind("<Leave>", hover_off)
-        canvas2.bind("<Button-1>", lambda e: show_profile_menu(self))
-
-        # MUSIC PLAYER BUTTON
         canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas1.place(relx=0.97, rely=0.83, anchor="se")
+        canvas1.place(relx=0.97, rely=0.95, anchor="se")
         canvas1.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas1.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
+        canvas1.create_text(54, 50, text="👤", fill="white", font=("Segoe UI", 30))
 
         hover_on = lambda e: canvas1.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
         hover_off = lambda e: canvas1.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
 
         canvas1.bind("<Enter>", hover_on)
         canvas1.bind("<Leave>", hover_off)
-        canvas1.bind("<Button-1>", lambda e: show_music_player(self))
+        canvas1.bind("<Button-1>", lambda e: show_profile_menu(self))
+
+        # MUSIC PLAYER BUTTON
+        canvas2 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
+        canvas2.place(relx=0.97, rely=0.83, anchor="se")
+        canvas2.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+        canvas2.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
+
+        hover_on = lambda e: canvas2.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
+        hover_off = lambda e: canvas2.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
+
+        canvas2.bind("<Enter>", hover_on)
+        canvas2.bind("<Leave>", hover_off)
+        canvas2.bind("<Button-1>", lambda e: show_music_player(self))
 
         # STREAK BUTTON
         canvas3 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
