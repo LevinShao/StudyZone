@@ -28,7 +28,6 @@ def get_user_data(username):
             "notebook": [],
             "events": [],
             "flashcards": [],
-            "sticky_notes": [],
             "journal_entries": [],
             "aim_trainer": {
                 "high_score": 0,
@@ -49,7 +48,6 @@ def get_user_data(username):
         "notebook": [],
         "events": [],
         "flashcards": [],
-        "sticky_notes": [],
         "journal_entries": [],
         "aim_trainer": {
             "high_score": 0,

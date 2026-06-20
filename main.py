@@ -117,6 +117,19 @@ class StudyZoneApp:
         else:
             self.time_emoji = "🌙"      # Night / Midnight
 
+        # Pomodoro States
+        self.pomodoro = {
+            "focus_time": 1500,
+            "short_break": 300,
+            "long_break": 900,
+            "time_left": 1500,
+            "running": False,
+            "timer_id": None,
+            "session_type": "focus",
+            "completed_sessions": 0,
+            "timer_callback": None,
+            }
+
         self.show_home()
 
     # CLEAR SCREEN

@@ -1,6 +1,6 @@
 import tkinter as tk
 from system_functions.backend.ui_helpers import *
-from system_functions.squares.mindfulness.wellbeing_journal import journal
+from system_functions.squares.mindfulness.wellbeing_journal.create_new_entry import create_new_entry
 
 def show_mindfulness(app):
     app.clear()
@@ -14,6 +14,6 @@ def show_mindfulness(app):
     grid = tk.Frame(container, bg=BG_MAIN)
     grid.pack(pady=0.1)
 
-    create_square(grid, "Wellbeing Journal", lambda: journal(app)).grid(row=0, column=0, padx=30, pady=150)
+    create_square(grid, "Wellbeing Journal", lambda: create_new_entry(app)).grid(row=0, column=0, padx=30, pady=150)
 
     bind_exit_menu(app)
