@@ -1,5 +1,2 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-
-db_files/users.json filter=git-crypt diff=git-crypt
-db_files/data.json filter=git-crypt diff=git-crypt
