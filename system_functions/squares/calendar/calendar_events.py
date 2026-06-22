@@ -21,8 +21,8 @@ def show_day_view(app, year, month, day):
 
     tk.Label(frame, text=f"Events for {date_str}", font=("Segoe UI", 20), bg=app.BG_CARD, fg=app.TEXT).pack(pady=10)
 
-    title_entry, _ = app.create_field(frame, "Event Title")
-    time_entry, _ = app.create_field(frame, "Time (HH:MM)")
+    title_entry, title_error = app.create_field(frame, "Event Title")
+    time_entry, time_error = app.create_field(frame, "Time (HH:MM)")
 
     listbox = tk.Listbox(frame, width=50)
     listbox.pack(pady=20)
@@ -36,6 +36,47 @@ def show_day_view(app, year, month, day):
         for e in get_day_events():
             status = "✓" if e.get("done") else "✗"
             listbox.insert(tk.END, f"{status} {e['time']} - {e['title']}")
+            
+    def validate_inputs(event=None):
+        # Input validation function to check deadline format and priority selection before enabling the Add Task button
+        valid = True
+
+        # Get task name and deadline from entry fields
+        title = title_entry.get().strip()
+        time = time_entry.get().strip()
+
+        # Clear previous error messages
+        title_error.config(text="")
+        time_error.config(text="")
+
+        # Task name check
+        if title == "":
+            title_error.config(text="Task name required")
+            valid = False
+        else:
+            duplicate_found = False
+            time = time_entry.get().strip()
+
+            for event in events:
+                if (event["title"].strip().lower() == title.lower() and event["time"] == time.lower()):
+                    duplicate_found = True
+                    break
+
+            if duplicate_found:
+                title_error.config(text="This event already exists")
+                valid = False
+            else:
+                title_error.config(text="")
+
+        # Deadline check
+        if time == "":
+            time_error.config(text="Time required")
+            valid = False
+
+        else:
+            time_error.config(text="")
+
+        add_btn.config(state="normal" if valid else "disabled")
 
     def add_event():
         # Add a new event to the user's events list with validation for time format and past date restriction
@@ -61,6 +102,11 @@ def show_day_view(app, year, month, day):
         events.append(event)
         update_user_data(app.current_user, user_data)
         refresh_list()
+
+        # Clear inputs
+        title_entry.delete(0, tk.END)
+        time_entry.delete(0, tk.END)
+        add_btn.config(state="disabled") # Used for re-disabling the add button after adding a task, re-enable after validating inputs again
 
     def get_selected_event():
         # Get the currently selected event in the listbox by matching the selected index with the filtered list of events for that day
@@ -177,5 +223,8 @@ def show_day_view(app, year, month, day):
         # Users can still mark events as complete or delete them if they want.
         add_btn.config(state="disabled")
         edit_btn.config(state="disabled")
+
+    title_entry.bind("<KeyRelease>", validate_inputs)
+    time_entry.bind("<KeyRelease>", validate_inputs)
 
     refresh_list()

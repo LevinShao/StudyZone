@@ -53,9 +53,9 @@ def show_task_tracker(app):
     # Refresh listbox with current tasks, showing status and priority
     def refresh_list():
         listbox.delete(0, tk.END)
-        for t in tasks:
-            status = "✓" if t["done"] else "✗"
-            listbox.insert(tk.END, f"{status} {t['name']} (P{t['priority']})")
+        for task in tasks:
+            status = "✓" if task["done"] else "✗"
+            listbox.insert(tk.END, f"{status} {task['name']} (P{task['priority']})")
 
     def validate_inputs(event=None):
         # Input validation function to check deadline format and priority selection before enabling the Add Task button

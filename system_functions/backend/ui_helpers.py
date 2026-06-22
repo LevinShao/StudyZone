@@ -37,6 +37,21 @@ def create_square(app, text, command):
 
     return square
 
+def create_oval(app, x, y, emoji, command):
+    canvas = tk.Canvas(app, width=100, height=100, bg=BG_MAIN, highlightthickness=0, cursor="hand2")
+    canvas.place(relx=x, rely=y, anchor="se")
+    oval = canvas.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
+    canvas.create_text(50, 50, text=emoji, fill="white", font=("Segoe UI", 30))
+
+    hover_on = lambda e: canvas.itemconfig(oval, fill=ACCENT_HOVER)
+    hover_off = lambda e: canvas.itemconfig(oval, fill=ACCENT)
+
+    canvas.bind("<Enter>", hover_on)
+    canvas.bind("<Leave>", hover_off)
+    canvas.bind("<Button-1>", lambda event: command())
+
+    return canvas
+
 # TWO DIFFERENT EXIT BUTTON FUNCTIONS TO AVOID CONFLICTS WITH BINDINGS IN DIFFERENT SCREENS 
 # (ESCAPE KEY BINDS TO DIFFERENT FUNCTIONS BASED ON SCREEN)
 

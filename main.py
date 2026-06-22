@@ -274,44 +274,10 @@ class StudyZoneApp:
         create_square(grid, "StudyBuddy", lambda: show_ai(self)).grid(row=1, column=4, padx=20, pady=50)                # SQUARE 9
         create_square(grid, "Utilities", lambda: show_utilities(self)).grid(row=1, column=5, padx=20, pady=50)          # SQUARE 10
 
-        # USER PROFILE BUTTON
-        canvas1 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas1.place(relx=0.97, rely=0.95, anchor="se")
-        canvas1.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas1.create_text(54, 50, text="👤", fill="white", font=("Segoe UI", 30))
-
-        hover_on = lambda e: canvas1.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
-        hover_off = lambda e: canvas1.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
-
-        canvas1.bind("<Enter>", hover_on)
-        canvas1.bind("<Leave>", hover_off)
-        canvas1.bind("<Button-1>", lambda e: show_profile_menu(self))
-
-        # MUSIC PLAYER BUTTON
-        canvas2 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas2.place(relx=0.97, rely=0.83, anchor="se")
-        canvas2.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas2.create_text(50, 50, text="🎵", fill="white", font=("Segoe UI", 30))
-
-        hover_on = lambda e: canvas2.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
-        hover_off = lambda e: canvas2.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
-
-        canvas2.bind("<Enter>", hover_on)
-        canvas2.bind("<Leave>", hover_off)
-        canvas2.bind("<Button-1>", lambda e: show_music_player(self))
-
-        # STREAK BUTTON
-        canvas3 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
-        canvas3.place(relx=0.97, rely=0.71, anchor="se")
-        canvas3.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
-        canvas3.create_text(50, 50, text="🔥", fill="white", font=("Segoe UI", 30))
-
-        hover_on = lambda e: canvas3.itemconfig(1, fill=ACCENT_HOVER) # Change oval color on hover
-        hover_off = lambda e: canvas3.itemconfig(1, fill=ACCENT) # Revert oval color when not hovering
-
-        canvas3.bind("<Enter>", hover_on)
-        canvas3.bind("<Leave>", hover_off)
-        canvas3.bind("<Button-1>", lambda e: show_streak_menu(self))
+        # MAIN MENU OVALS
+        create_oval(self.root, 0.97, 0.95, "👤", lambda: show_profile_menu(self))
+        create_oval(self.root, 0.97, 0.83, "🎵", lambda: show_music_player(self))
+        create_oval(self.root, 0.97, 0.71, "🔥", lambda: show_streak_menu(self))
 
         # SUPPORT BUTTON
         canvas4 = tk.Canvas(self.root, width=100, height=100, bg=BG_MAIN, highlightthickness=0)
