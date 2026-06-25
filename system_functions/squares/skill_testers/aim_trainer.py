@@ -73,25 +73,21 @@ def show_aim_trainer(app):
     def create_target():
         # Get canvas size each time to ensure targets spawn within bounds even if window is resized
         canvas_width, canvas_height = get_canvas_size()
-        radius = 30
 
-        x = random.randint(radius, canvas_width - radius)
-        y = random.randint(radius, canvas_height - radius)
+        # Find some random ahh position on the canvas for the center of target
+        x = random.randint(30, canvas_width - 30) # x coord
+        y = random.randint(30, canvas_height - 30) # y coord
+        target = canvas.create_oval(x-30, y-30, x+30, y+30, fill="red") # left side, down side, up side, right side, red colour
 
-        target = canvas.create_oval(x-radius, y-radius, x+radius, y+radius, fill="red")
         return target
-
-    def update_score():
-        score_label.config(text=f"Score: {score}")
 
     def on_click(event):
         # Increment total clicks for accuracy calculation (nonlocal means we can modify the variable defined in the outer function)
         nonlocal score, hits, clicks
-
         clicks += 1
+
         # Get all items under the click (in case of multiple targets overlapping, which is rare but possible, still trying to find a proper fix)
         items = canvas.find_overlapping(event.x, event.y, event.x, event.y)
-
         hit = False # Flag to check if we hit a target, used to prevent multiple hits from one click if targets overlap
 
         for item in items:
@@ -99,11 +95,9 @@ def show_aim_trainer(app):
             if item in targets:
                 canvas.delete(item)
                 targets.remove(item)
-
-                score += 1
-                hits += 1
-
-                update_score()
+                score += 1 # Add 1 more to score
+                hits += 1 # Add 1 more to total hits
+                score_label.config(text=f"Score: {score}")
                 hit = True
                 break
 
@@ -143,7 +137,6 @@ def show_aim_trainer(app):
     def end_game():
         # When the game ends, stop spawning targets and stop the timer, then show the summary screen
         nonlocal running
-
         running = False
 
         try:

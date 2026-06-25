@@ -127,7 +127,7 @@ class StudyZoneApp:
             "timer_id": None,
             "session_type": "focus",
             "completed_sessions": 0,
-            "timer_callback": None,
+            "timer_callback": None
             }
 
         self.show_home()
