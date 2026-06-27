@@ -8,12 +8,12 @@
         "flashcards": [],
         "journal_entries": [],
         "aim_trainer": {
-            "high_score": 36,
-            "games_played": 2,
-            "best_accuracy": 89
+            "high_score": 0,
+            "games_played": 0,
+            "best_accuracy": 0
         },
         "reaction_trainer": {
-            "best_time": 220
+            "best_time": 0
         }
     }
 }

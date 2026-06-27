@@ -1,6 +1,6 @@
 import tkinter as tk
 from system_functions.squares.study_tools.flashcards.flashcards_review import review_flashcards
-from system_functions.backend.ui_helpers import create_small_button, bind_exit_menu
+from system_functions.backend.ui_helpers import create_small_button, bind_exit_inner_menu
 from db_files.data_manager import get_user_data, update_user_data
 
 def show_flashcards(app):
@@ -122,29 +122,17 @@ def show_flashcards(app):
     btn_frame.pack(pady=20)
 
     # Row 1
-    create_small_button(btn_frame, "Add Flashcard", add_flashcard, app, primary=False).grid(row=0, column=0, padx=15, pady=15)
-    create_small_button(btn_frame, "Edit Flashcard", edit_flashcard, app, primary=False).grid(row=0, column=1, padx=15, pady=15)
+    create_small_button(btn_frame, "Add Flashcard", add_flashcard, app, primary=True).grid(row=0, column=0, padx=15, pady=15)
+    create_small_button(btn_frame, "Edit Flashcard", edit_flashcard, app, primary=True).grid(row=0, column=1, padx=15, pady=15)
 
     # Row 2
-    create_small_button(btn_frame, "Delete Flashcard", delete_flashcard, app, primary=False).grid(row=1, column=0, padx=15, pady=10)
-    create_small_button(btn_frame, "Review Flashcards", show_review_menu, app, primary=True).grid(row=1, column=1, padx=15, pady=10)
+    create_small_button(btn_frame, "Delete Flashcard", delete_flashcard, app, primary=True).grid(row=1, column=0, padx=15, pady=10)
+    create_small_button(btn_frame, "Review Flashcards", show_review_menu, app, primary=False).grid(row=1, column=1, padx=15, pady=10)
 
     # EXIT BUTTON FUNCTIONS
-    def exit_to_studymenu(event=None):
+    def exit_btn():
         from system_functions.squares.inner_menus.study_tools import show_studymenu
+        bind_exit_inner_menu(app, show_studymenu)
 
-        app.root.unbind("<Escape>")
-        show_studymenu(app)
-
-    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
-    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
-
-    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-    exit_btn.lift()
-    exit_btn.bind("<Enter>", hover_on)
-    exit_btn.bind("<Leave>", hover_off)
-    exit_btn.bind("<Button-1>", exit_to_studymenu)
-    app.root.bind("<Escape>", exit_to_studymenu)
-
+    exit_btn()
     refresh()

@@ -1,6 +1,6 @@
 import tkinter as tk
 import random
-from system_functions.backend.ui_helpers import create_small_button
+from system_functions.backend.ui_helpers import create_small_button, bind_exit_inner_menu
 
 def review_flashcards(app, flashcards):
     # Mostly made using list structures
@@ -84,22 +84,6 @@ def review_flashcards(app, flashcards):
 
         update_card()
 
-    # Exit Review Function
-    def exit_review(event=None):
-        # Import inside of function to prevent circular import error
-        from system_functions.squares.study_tools.flashcards.flashcards_main import show_flashcards
-
-        # Unbind the Escape key to prevent it from triggering the review menu's exit function
-        app.root.unbind("<Escape>")
-        show_flashcards(app)
-
-    # Exit Button
-    exit_btn = tk.Label(review_frame, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-    exit_btn.lift()
-    exit_btn.bind("<Button-1>", exit_review)
-    app.root.bind("<Escape>", exit_review)
-
     # Click to flip bindings on both the card frame and the text so that clicking anywhere on the card flips it
     card_frame.bind("<Button-1>", flip_card)
     card_text.bind("<Button-1>", flip_card)
@@ -112,5 +96,10 @@ def review_flashcards(app, flashcards):
     create_small_button(btn_frame, "Next", next_card, app, primary=True).grid(row=0, column=1, padx=20)
     create_small_button(btn_frame, "Shuffle", shuffle_cards, app, primary=False).grid(row=0, column=2, padx=20)
 
-    # Initial card display
-    update_card()
+    # EXIT BUTTON FUNCTIONS
+    def exit_btn():
+        from system_functions.squares.study_tools.flashcards.flashcards_main import show_flashcards
+        bind_exit_inner_menu(app, show_flashcards)
+
+    exit_btn()
+    update_card() # Initial card display

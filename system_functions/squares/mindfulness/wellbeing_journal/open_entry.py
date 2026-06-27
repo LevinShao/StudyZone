@@ -83,8 +83,6 @@ def open_journal_entry(app, index):
         emotion_edit.config(state="normal")
         text_box.config(state="normal")
 
-    set_read_only()
-
     # Edit / Save Changes
     def toggle_edit():
 
@@ -124,20 +122,10 @@ def open_journal_entry(app, index):
 
     create_small_button(btn_frame, "Delete Entry", delete_entry, app, primary=False).grid(row=0, column=1, padx=10)
 
-    # Exit Button
-    def exit_to_entries(event=None):
+    # EXIT BUTTON FUNCTIONS
+    def exit_btn():
         from system_functions.squares.mindfulness.wellbeing_journal.view_your_entries import show_entries
+        bind_exit_inner_menu(app, show_entries)
 
-        app.root.unbind("<Escape>")
-        show_entries(app)
-
-    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
-    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
-
-    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-    exit_btn.lift()
-    exit_btn.bind("<Enter>", hover_on)
-    exit_btn.bind("<Leave>", hover_off)
-    exit_btn.bind("<Button-1>", exit_to_entries)
-    app.root.bind("<Escape>", exit_to_entries)
+    exit_btn()
+    set_read_only()

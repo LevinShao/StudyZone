@@ -1,6 +1,7 @@
 import tkinter as tk
 import random
 import time
+from system_functions.backend.ui_helpers import bind_exit_inner_menu
 
 # CREDITS TO YOUTUBE TUTORIAL Code With Don
 
@@ -60,25 +61,11 @@ def show_typing_app(app):
             result_label.config(text="Please try again, otherwise thou shalt not pass.", fg="red")
 
     sentence_entry.bind("<Return>", check_sentence)
-    
-    # Start the first word
-    get_new_sentence()
 
-    # EXIT BUTTON FUNCTIONS
-    def exit_to_skill_menu(event=None):
-        # Import inside of function (to prevent circular import error)
+    # EXIT BUTTON
+    def exit_btn():
         from system_functions.squares.inner_menus.skill_training_menu import show_skill_menu
-        frame.destroy()
-        app.root.unbind("<Escape>")
-        show_skill_menu(app)
+        bind_exit_inner_menu(app, show_skill_menu)
 
-    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
-    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
-
-    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-    exit_btn.lift()
-    exit_btn.bind("<Enter>", hover_on)
-    exit_btn.bind("<Leave>", hover_off)
-    exit_btn.bind("<Button-1>", exit_to_skill_menu)
-    app.root.bind("<Escape>", exit_to_skill_menu)
+    exit_btn()
+    get_new_sentence() # Start the first word

@@ -1,6 +1,7 @@
 import tkinter as tk
 
-# MAIN COLOUR PALETTE
+# --------------------- MAIN COLOUR PALETTE ---------------------
+
 BG_MAIN = "#0f172a"        # deep navy background
 BG_CARD = "#1e293b"        # card background (slightly lighter navy)
 ACCENT = "#ef4444"         # red accent (buttons, highlights, etc.)
@@ -8,6 +9,8 @@ ACCENT_HOVER = "#dc2626"   # darker red for hover state
 TEXT = "#f1f5f9"           # off-white text for high contrast and readability
 SUBTLE = "#94a3b8"         # lighter text for subtitles and less important info
 INPUT_BG = "#020617"       # very dark background for input fields to make them stand out
+
+# --------------------- CREATE UI HELPER FUNCTIONS --------------------- 
 
 def create_small_button(parent, text, command, app, primary=True):
     bg = app.ACCENT if primary else "#22C55E"
@@ -52,7 +55,9 @@ def create_oval(app, x, y, emoji, command):
 
     return canvas
 
-# TWO DIFFERENT EXIT BUTTON FUNCTIONS TO AVOID CONFLICTS WITH BINDINGS IN DIFFERENT SCREENS 
+# --------------------- EXIT BINDS ---------------------
+
+# THREE DIFFERENT EXIT BUTTON FUNCTIONS TO AVOID CONFLICTS WITH BINDINGS IN DIFFERENT SCREENS 
 # (ESCAPE KEY BINDS TO DIFFERENT FUNCTIONS BASED ON SCREEN)
 
 def bind_exit_menu(app):
@@ -88,6 +93,25 @@ def bind_exit_home(app):
     exit_btn.bind("<Enter>", hover_on)
     exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", lambda e: app.show_home())
+
+def bind_exit_inner_menu(app, destination):
+    def exit_to_inner_menu(event=None):
+        app.root.unbind("<Escape>")
+        destination(app)
+
+    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
+    exit_btn.place(x=30, y=30)
+    exit_btn.lift()
+
+    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
+    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
+
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
+    exit_btn.bind("<Button-1>", exit_to_inner_menu)
+    app.root.bind("<Escape>", exit_to_inner_menu)
+
+# --------------------- SCROLLABLE PAGE! (EXPERIMENTAL) ---------------------
 
 def create_scrollable_page(root, bg):
     # This is a debugging tool used to fix issues with StudyZone display when users use the app on computers with extremely small screens

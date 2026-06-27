@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
 from db_files.data_manager import get_user_data, update_user_data
-from system_functions.backend.ui_helpers import create_small_button
-from system_functions.squares.calendar.calendar_view import show_calendar
+from system_functions.backend.ui_helpers import create_small_button, bind_exit_inner_menu
 
 def show_day_view(app, year, month, day):
     # Show the day view with events for that specific day
@@ -185,26 +184,7 @@ def show_day_view(app, year, month, day):
         if selected:
             show_event_popup(events[selected[0]])
 
-    # Back Arrow + Exit to Calendar on Escape Key
-    def exit_to_calendar(event=None):
-        app.root.unbind("<Escape>")
-        show_calendar(app, year, month)
-
-    app.root.bind("<Escape>", exit_to_calendar) # Bind Escape key to exit back to calendar view from day view
     listbox.bind("<Double-Button-1>", view_event_details) # Bind double-click to view event details
-
-    exit_btn = tk.Label(app.root, text="←", fg="white", bg="#ef4444", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)    
-    
-    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
-    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
-
-    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-    exit_btn.lift()
-    exit_btn.bind("<Enter>", hover_on)
-    exit_btn.bind("<Leave>", hover_off)
-    exit_btn.bind("<Button-1>", exit_to_calendar)
 
     # Button Frame
     btn_frame = tk.Frame(frame, bg=app.BG_CARD)
@@ -227,4 +207,10 @@ def show_day_view(app, year, month, day):
     title_entry.bind("<KeyRelease>", validate_inputs)
     time_entry.bind("<KeyRelease>", validate_inputs)
 
+    # EXIT BUTTON FUNCTIONS
+    def exit_btn():
+        from system_functions.squares.calendar.calendar_view import show_calendar
+        bind_exit_inner_menu(app, show_calendar)
+
+    exit_btn()
     refresh_list()
