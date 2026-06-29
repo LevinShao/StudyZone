@@ -1,7 +1,7 @@
 import tkinter as tk
-from tkinter import ttk
+import customtkinter as ctk
 import pygame # Import pygame for music playback functionality
-from system_functions.backend.ui_helpers import bind_exit_menu
+from system_functions.backend.ui_helpers import bind_exit_menu, create_small_button
 from system_functions.ovals.music_system.playlist_manager import show_playlist_manager
 
 def show_music_player(app):
@@ -17,8 +17,9 @@ def show_music_player(app):
         app.volume = float(value) / 100
         pygame.mixer.music.set_volume(app.volume)
 
-    # Main volume slider
-    volume_slider = ttk.Scale(frame, from_=0, to=100, orient="horizontal", command=set_volume)
+    # Updated CTk volume slider
+    volume_slider = ctk.CTkSlider(frame, from_=0, to=100,  width=300, height=16, corner_radius=8, button_color="#4a90e2", 
+                                  button_hover_color="#357abd", progress_color="#4a90e2", fg_color="#2b2b2b", command=set_volume)
     volume_slider.set(app.volume * 100)
     volume_slider.pack(pady=10)
 
@@ -35,14 +36,15 @@ def show_music_player(app):
         pygame.mixer.music.play()
 
     def view_playlist():
-        # Go to playlist manager screen
-        show_playlist_manager(app)
+        show_playlist_manager(app) # Go to playlist manager screen
+
+    btn_frame = tk.Frame(frame, bg=app.BG_CARD)
+    btn_frame.pack(pady=20)
 
     # Buttons
-    tk.Button(frame, text="Pause / Resume", command=pause, bg=app.ACCENT, fg=app.TEXT, width=20).pack(pady=10)
-    tk.Button(frame, text="Restart Song", command=restart, bg=app.ACCENT, fg=app.TEXT, width=20).pack(pady=10)
-    tk.Button(frame, text="View Playlist", command=view_playlist, bg=app.ACCENT, fg=app.TEXT, width=20).pack(pady=10)
-    tk.Button(frame, text="← Back", command=app.show_main_menu, bg=app.BG_CARD, fg=app.TEXT, width=20).pack(pady=10)
+    create_small_button(btn_frame, "Pause / Resume", pause, app, primary=True).grid(row=0, column=0, padx=15, pady=15)
+    create_small_button(btn_frame, "Restart Song", restart, app, primary=True).grid(row=1, column=0, padx=15, pady=15)
+    create_small_button(btn_frame, "View Playlist", view_playlist, app, primary=False).grid(row=2, column=0, padx=15, pady=(10, 0))
 
     # Exit Button
     bind_exit_menu(app)

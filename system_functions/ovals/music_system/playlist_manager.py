@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog # Import filedialog for selecting music files
+import random
 import os
+from system_functions.backend.ui_helpers import create_small_button, bind_exit_inner_menu
 
 def show_playlist_manager(app):
     app.clear()
@@ -19,8 +21,6 @@ def show_playlist_manager(app):
         listbox.delete(0, tk.END)
         for song in app.playlist:
             listbox.insert(tk.END, os.path.basename(song))
-
-    refresh()
 
     def add_song():
         # Add song to playlist using file dialog, then refresh the listbox to show the new song
@@ -42,9 +42,27 @@ def show_playlist_manager(app):
         if selected:
             song = app.playlist[selected[0]]
             app.play_music(song)
+    
+    def play_random_song():
+        # Play a random song from the playlist
+        if app.playlist:
+            random_song = random.choice(app.playlist)
+            app.play_music(random_song)
+
+    # EXIT BUTTON FUNCTIONS
+    def exit_btn():
+        from system_functions.ovals.music_system.music_settings import show_music_player
+        bind_exit_inner_menu(app, show_music_player)
+
+    btn_frame = tk.Frame(frame, bg=app.BG_CARD)
+    btn_frame.pack(pady=20)
 
     # Buttons
-    tk.Button(frame, text="Add Song", command=add_song, bg=app.ACCENT, fg=app.TEXT, width=20).pack(pady=5)
-    tk.Button(frame, text="Remove Song", command=remove_song, bg="#334155", fg=app.TEXT, width=20).pack(pady=5)
-    tk.Button(frame, text="Play Selected", command=play_selected, bg="#334155", fg=app.TEXT, width=20).pack(pady=5)
-    tk.Button(frame, text="← Back", command=app.show_main_menu, bg=app.BG_CARD, fg=app.TEXT, width=20).pack(pady=10)
+    create_small_button(btn_frame, "Add Song", add_song, app, primary=True).grid(row=0, column=0, padx=15, pady=15)
+    create_small_button(btn_frame, "Remove Song", remove_song, app, primary=True).grid(row=0, column=1, padx=15, pady=15)
+    create_small_button(btn_frame, "Play Selected", play_selected, app, primary=False).grid(row=1, column=0, padx=15, pady=10)
+    create_small_button(btn_frame, "Play Random", play_random_song, app, primary=False).grid(row=1, column=1, padx=15, pady=10)
+
+    # INITIALIZATION
+    exit_btn()
+    refresh()

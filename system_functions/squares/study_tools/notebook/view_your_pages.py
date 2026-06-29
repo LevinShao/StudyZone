@@ -74,23 +74,12 @@ def show_notebook_pages(app):
 
     listbox.bind("<Double-Button-1>", open_selected_entry)
 
-    # Exit Button
-    def exit_to_create_menu(event=None):
+    # EXIT BUTTON FUNCTIONS
+    def exit_btn():
         from system_functions.squares.study_tools.notebook.create_new_page import create_new_page
+        bind_exit_inner_menu(app, create_new_page)
 
-        app.root.unbind("<Escape>")
-        create_new_page(app)
-
-    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
-    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
-
-    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-    exit_btn.lift()
-    exit_btn.bind("<Enter>", hover_on)
-    exit_btn.bind("<Leave>", hover_off)
-    exit_btn.bind("<Button-1>", exit_to_create_menu)
-    app.root.bind("<Escape>", exit_to_create_menu)
+    exit_btn()
 
     # Whenever the selected filter category changes, refresh the listbox. 
     # We use *args since Tkinter auto-passes three arguments to callback. To ignore them, *args is the best way.

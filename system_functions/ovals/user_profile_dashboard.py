@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 import json
 from db_files.data_manager import load_data, save_data
 from system_functions.backend.ui_helpers import bind_exit_menu
@@ -7,6 +7,8 @@ import pygame # Import pygame to stop music playback when logging out or deletin
 
 def show_profile_menu(app):
     app.clear() # Clear the current screen to show the profile menu
+    
+    ACCOUNTDB_FILE = "db_files/users.json"
 
     frame = tk.Frame(app.root, bg=app.BG_CARD, padx=100, pady=100)
     frame.pack(expand=True)
@@ -26,8 +28,6 @@ def show_profile_menu(app):
         # Delete account function with confirmation dialog
         if not messagebox.askyesno("Delete Account Confirmation", "Are you sure you want to delete your account?\nThis action cannot be undone."):
             return
-        
-        ACCOUNTDB_FILE = "db_files/users.json"
 
         # delete from users.json
         with open(ACCOUNTDB_FILE, "r") as f:
@@ -50,10 +50,23 @@ def show_profile_menu(app):
         pygame.mixer.music.stop()
         app.show_home()
 
+    def rename_account():
+        # Use simpledialog for text input instead of messagebox
+        new_username = simpledialog.askstring("Rename Account", "Enter the new username:")
+        data = load_data()
+        
+        # Handle the cancel button (returns None) or empty input
+        if new_username:
+            app.current_user = new_username.strip() # Optional: removes accidental trailing spaces
+            save_data(data)
+            messagebox.showinfo("Success", f"Username updated to: {app.current_user}")
+        elif new_username is not None:
+            messagebox.showwarning("Warning", "Username cannot be empty!")
+
     # Buttons
+    tk.Button(frame, text="Rename Account", command=rename_account, bg=app.ACCENT, fg=app.TEXT, width=20, height=2).pack(pady=10)
     tk.Button(frame, text="Log Out", command=logout, bg=app.ACCENT, fg=app.TEXT, width=20, height=2).pack(pady=10)
     tk.Button(frame, text="Delete Account", command=delete_account, bg=app.ACCENT, fg=app.TEXT, width=20, height=2).pack(pady=10)
-    tk.Button(frame, text="← Back", command=app.show_main_menu, bg=app.BG_CARD, fg=app.TEXT, width=20, height=2).pack(pady=10)
 
     # EXIT BUTTON
     bind_exit_menu(app)

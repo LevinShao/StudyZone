@@ -20,6 +20,5 @@ def show_streak_menu(app):
     tk.Label(frame, text=f"{user['streak']} Days", font=("Segoe UI", 42, "bold"), bg=app.BG_CARD, fg="#f97316").pack()
     tk.Label(frame, text=f"Best Streak: {user.get('best_streak', 0)} Days", font=("Segoe UI", 14), bg=app.BG_CARD, fg=app.TEXT).pack(pady=10)
     tk.Label(frame, text=f"Last Login:\n{user.get('last_login_date', 'N/A')}", font=("Segoe UI", 12), bg=app.BG_CARD, fg=app.SUBTLE).pack(pady=10)
-    tk.Button(frame, text="← Back", command=app.show_main_menu, bg=app.BG_CARD, fg=app.TEXT, width=20, height=2).pack(pady=10)
 
     bind_exit_menu(app)

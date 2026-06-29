@@ -2,6 +2,7 @@ import tkinter as tk
 import time
 import random
 from db_files.data_manager import get_user_data, update_user_data
+from system_functions.backend.ui_helpers import bind_exit_inner_menu
 
 def show_reaction_trainer(app):
     app.clear()
@@ -149,21 +150,9 @@ def show_reaction_trainer(app):
         start_time = time.time() # Record the time when the screen turns green
         can_click = True
 
-    # EXIT BUTTON FUNCTIONS
-    def exit_to_skill_menu(event=None):
-        # Import inside of function (to prevent circular import error)
+    # EXIT BUTTON
+    def exit_btn():
         from system_functions.squares.inner_menus.skill_training_menu import show_skill_menu
+        bind_exit_inner_menu(app, show_skill_menu)
 
-        app.root.unbind("<Escape>")
-        show_skill_menu(app)
-
-    hover_on = lambda e: exit_btn.config(bg=app.ACCENT_HOVER)
-    hover_off = lambda e: exit_btn.config(bg=app.ACCENT)
-
-    exit_btn = tk.Label(app.root, text="←", bg="#ef4444", fg="white", font=("Segoe UI", 18, "bold"), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-    exit_btn.lift()
-    exit_btn.bind("<Enter>", hover_on)
-    exit_btn.bind("<Leave>", hover_off)
-    exit_btn.bind("<Button-1>", exit_to_skill_menu)
-    app.root.bind("<Escape>", exit_to_skill_menu)
+    exit_btn()

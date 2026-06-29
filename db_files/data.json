@@ -26,7 +26,7 @@
             "best_accuracy": 89
         },
         "reaction_trainer": {
-            "best_time": 220
+            "best_time": 0
         }
     }
 }
