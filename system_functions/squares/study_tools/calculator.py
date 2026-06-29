@@ -11,12 +11,12 @@ def show_calculator(app):
     container = tk.Frame(app.root, bg=app.BG_MAIN)
     container.pack(fill="both", expand=True)
 
-    card = tk.Frame(container, bg=app.BG_CARD, padx=30, pady=30)
-    card.pack(expand=True)
+    frame = tk.Frame(container, bg=app.BG_frame, padx=30, pady=30)
+    frame.pack(expand=True)
 
-    tk.Label(card, text="Calculator", font=("Segoe UI", 24, "bold"), bg=app.BG_CARD, fg=app.TEXT).grid(row=0, column=0, columnspan=4, pady=(0,20))
-    entry = tk.Entry(card, textvariable=display, font=("Segoe UI", 14), justify="right")
-    entry.grid(row=1, column=0, columnspan=4, sticky="ew", pady=(0,15), ipady=8)
+    tk.Label(frame, text="Calculator", font=("Segoe UI", 24, "bold"), bg=app.BG_frame, fg=app.TEXT).grid(row=0, column=0, columnspan=4, pady=(0, 20))
+    entry = tk.Entry(frame, textvariable=display, font=("Segoe UI", 14), justify="right")
+    entry.grid(row=1, column=0, columnspan=4, sticky="ew", pady=(0, 15), ipady=8)
 
     def press(key):
         nonlocal expression
@@ -41,7 +41,7 @@ def show_calculator(app):
 
     def make_button(text, row, column, command):
         # Adds a button for every single number and operator
-        tk.Button(card, text=text, command=command, width=8, height=2, bg="#334155", fg="white", relief="flat").grid(row=row, column=column, padx=3, pady=3)
+        tk.Button(frame, text=text, command=command, width=8, height=2, bg="#334155", fg="white", relief="flat").grid(row=row, column=column, padx=3, pady=3)
 
     # Numbers
     make_button("1", 2, 0, lambda: press(1)) # Text = 1, Row = 2, Column = 0, Command = press(1)

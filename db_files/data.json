@@ -3,13 +3,26 @@
         "tasks": [],
         "goals": [],
         "habits": [],
-        "notebook": [],
+        "notebook": [
+            {
+                "title": "Notes for Biology",
+                "category": "Biology",
+                "content": "Mitochondria is the powerhouse of the cell",
+                "date_created": "26 June 2026",
+                "last_modified": "26 June 2026"
+            }
+        ],
         "events": [],
-        "flashcards": [],
+        "flashcards": [
+            {
+                "question": "What is the derivative of 3x^2 + 6x + 7?",
+                "answer": "6x + 6"
+            }
+        ],
         "journal_entries": [],
         "aim_trainer": {
             "high_score": 36,
-            "games_played": 2,
+            "games_played": 3,
             "best_accuracy": 89
         },
         "reaction_trainer": {

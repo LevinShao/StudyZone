@@ -11,6 +11,7 @@ import pygame                       # Music player + playlist system (Using Pyga
 from system_functions.backend.ui_helpers import *                                      # Import everything from UI helpers module
 from system_functions.registration_login_systems import *                              # Registration & Login systems
 from system_functions.support import show_support_menu                                 # SIDEBAR 1: Support module (not currently developed)
+from system_functions.help import show_help_menu                                       # HELP MENU
 
 from system_functions.ovals.user_profile_dashboard import show_profile_menu            # OVAL 1: User Profile Dashboard module
 from system_functions.ovals.music_system.music_settings import show_music_player       # OVAL 2: Music Player module
@@ -153,34 +154,6 @@ class StudyZoneApp:
         except:
             print("Music file missing:", self.current_song)
 
-    def dev_login(self):
-        # Developer mode for quick access without registration/login during development
-        # Will be remade into an app help guide in the future
-        username = "StudyDev"
-
-        # Load DB
-        with open(ACCOUNTDB_FILE, "r") as f:
-            data = json.load(f)
-
-        # Create account if it doesn't exist
-        if username not in data:
-            data[username] = {
-                "username": username,
-                "email": "dev@studyzone.com",
-                "dob": "2000-01-01",
-                "password": hash_password("Password123!"),
-                "streak": 0
-            }
-
-            with open(ACCOUNTDB_FILE, "w") as f:
-                json.dump(data, f, indent=4)
-
-        # Log in directly
-        self.current_user = username
-        update_login_streak(username)
-        self.show_main_menu()
-        self.play_music()
-
     # HOME SCREEN
     def show_home(self):
         self.clear() # Clear existing widgets to show home screen
@@ -210,7 +183,7 @@ class StudyZoneApp:
 
         create_button(button_frame, "Register", lambda: user_registration(self)).pack(pady=10)
         create_button(button_frame, "Log In", lambda: user_login(self)).pack(pady=20)
-        create_button(button_frame, "Developer Mode", self.dev_login, primary=False).pack(pady=10)
+        create_button(button_frame, "Help Guide", lambda: show_help_menu(self), primary=False).pack(pady=10)
 
         def confirm_exit(event=None):
             # Exit confirmation popup when user presses Escape key in the main menu
