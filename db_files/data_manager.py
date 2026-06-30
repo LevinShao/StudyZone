@@ -11,8 +11,10 @@ ACCOUNTDB_BACKUP = "db_files/backup/users_backup.json" # Backup file for user ac
 BACKUP_FILES = {DATADB_FILE: DATADB_BACKUP, ACCOUNTDB_FILE: ACCOUNTDB_BACKUP} # Dictionary to store backup files for each main file
 
 def load_data(filename):
-    """Safely load a JSON file. 
-    If the file is missing or corrupted, return an empty dictionary instead of crashing."""
+    """
+    Safely load a JSON file. 
+    If the file is missing or corrupted, return an empty dictionary instead of crashing.
+    """
     if not os.path.exists(filename):
         return {}
 

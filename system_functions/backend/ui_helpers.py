@@ -73,23 +73,6 @@ def create_oval(app, x, y, emoji, command):
 # THREE DIFFERENT EXIT BUTTON FUNCTIONS TO AVOID CONFLICTS WITH BINDINGS IN DIFFERENT SCREENS 
 # (ESCAPE KEY BINDS TO DIFFERENT FUNCTIONS BASED ON SCREEN)
 
-def bind_exit_menu(app):
-    # Exit function to go back to main menu when Escape key is pressed
-    exit_btn = tk.Label(app.root, text="✖", fg="white", bg=app.ACCENT, font=("Segoe UI", 16), cursor="hand2")
-    exit_btn.place(x=30, y=30)
-
-    def exit_to_menu(event=None):
-        app.root.unbind("<Escape>")
-        app.show_main_menu()
-
-    hover_on = lambda e: exit_btn.config(bg=ACCENT_HOVER)
-    hover_off = lambda e: exit_btn.config(bg=ACCENT)
-
-    app.root.bind("<Escape>", exit_to_menu)
-    exit_btn.bind("<Enter>", hover_on)
-    exit_btn.bind("<Leave>", hover_off)
-    exit_btn.bind("<Button-1>", lambda e: app.show_main_menu())
-
 def bind_exit_home(app):
     # Exit function to go back to home screen (a.k.a first menu) when Escape key is pressed
     exit_btn = tk.Label(app.root, text="✖", fg="white", bg=app.ACCENT, font=("Segoe UI", 16), cursor="hand2")
@@ -106,6 +89,23 @@ def bind_exit_home(app):
     exit_btn.bind("<Enter>", hover_on)
     exit_btn.bind("<Leave>", hover_off)
     exit_btn.bind("<Button-1>", lambda e: app.show_home())
+
+def bind_exit_menu(app):
+    # Exit function to go back to main menu when Escape key is pressed
+    exit_btn = tk.Label(app.root, text="✖", fg="white", bg=app.ACCENT, font=("Segoe UI", 16), cursor="hand2")
+    exit_btn.place(x=30, y=30)
+
+    def exit_to_menu(event=None):
+        app.root.unbind("<Escape>")
+        app.show_main_menu()
+
+    hover_on = lambda e: exit_btn.config(bg=ACCENT_HOVER) # Lambda means anonymous functions, crucial for functions with events
+    hover_off = lambda e: exit_btn.config(bg=ACCENT)
+
+    app.root.bind("<Escape>", exit_to_menu)
+    exit_btn.bind("<Enter>", hover_on)
+    exit_btn.bind("<Leave>", hover_off)
+    exit_btn.bind("<Button-1>", lambda e: app.show_main_menu())
 
 def bind_exit_inner_menu(app, destination):
     def exit_to_inner_menu(event=None):
