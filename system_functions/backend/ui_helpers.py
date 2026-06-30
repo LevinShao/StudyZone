@@ -16,12 +16,25 @@ def create_small_button(parent, text, command, app, primary=True):
     bg = app.ACCENT if primary else "#22C55E"
     btn = tk.Label(parent, text=text, bg=bg, fg="white", font=("Segoe UI", 12, "bold"), width=18, height=2,cursor="hand2")
 
-    on_enter = lambda e: btn.config(bg="#dc2626" if primary else "#16a34a")
-    on_leave = lambda e: btn.config(bg=bg)
+    # New functions to make it so that buttons don't have hover effect when disabled   
+    def hover_on(event):
+        if str(btn.cget("state")) == "disabled":
+            return
+        btn.config(bg="#dc2626" if primary else "#16a34a")
 
-    btn.bind("<Enter>", on_enter)
-    btn.bind("<Leave>", on_leave)
-    btn.bind("<Button-1>", lambda e: command())
+    def hover_off(event):
+        if str(btn.cget("state")) == "disabled":
+            return
+        btn.config(bg=bg)
+
+    def clicked(event):
+        if str(btn.cget("state")) == "disabled":
+            return
+        command()
+
+    btn.bind("<Enter>", hover_on)
+    btn.bind("<Leave>", hover_off)
+    btn.bind("<Button-1>", clicked)
 
     return btn
 
@@ -30,7 +43,7 @@ def create_square(app, text, command):
     square = tk.Label(app, text=text, bg=BG_CARD, fg=TEXT, font=("Segoe UI", 14, "bold"), width=20, height=8, cursor="hand2")
 
     # Hover effect to change background color when mouse is over the square
-    hover_on = lambda e: square.config(bg="#334155")
+    hover_on = lambda e: square.config(bg="#334155") # lambda means "anonymous function", without it, the square wouldn't change color because the event is not passed in
     hover_off = lambda e: square.config(bg=BG_CARD)
 
     # Bind hover and click events to the square
@@ -42,7 +55,7 @@ def create_square(app, text, command):
 
 def create_oval(app, x, y, emoji, command):
     canvas = tk.Canvas(app, width=100, height=100, bg=BG_MAIN, highlightthickness=0, cursor="hand2")
-    canvas.place(relx=x, rely=y, anchor="se")
+    canvas.place(relx=x, rely=y, anchor="se") # Place the canvas at specified position with bottom right as anchor
     oval = canvas.create_oval(5, 5, 100, 100, fill=ACCENT, outline="")
     canvas.create_text(50, 50, text=emoji, fill="white", font=("Segoe UI", 30))
 

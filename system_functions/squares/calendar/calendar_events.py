@@ -57,8 +57,8 @@ def show_day_view(app, year, month, day):
             time = time_entry.get().strip()
 
             for event in events:
-                if (event["title"].strip().lower() == title.lower() and event["time"] == time.lower()):
-                    duplicate_found = True
+                if (event["title"].strip().lower() == title.lower() and event["time"] == time.lower()): # Check if the title and time match exactly
+                    duplicate_found = True # Duplicate found
                     break
 
             if duplicate_found:
@@ -193,8 +193,10 @@ def show_day_view(app, year, month, day):
     # Buttons
     add_btn = create_small_button(btn_frame, "Add Event", add_event, app, primary=True)
     add_btn.grid(row=0, column=0, padx=10, pady=10)
+
     edit_btn = create_small_button(btn_frame, "Edit Event", edit_event, app, primary=False)
     edit_btn.grid(row=0, column=1, padx=10, pady=10)
+    
     create_small_button(btn_frame, "Mark Complete", complete_event, app, primary=False).grid(row=1, column=0, padx=10, pady=10)
     create_small_button(btn_frame, "Delete Event", delete_event, app, primary=False).grid(row=1, column=1, padx=10, pady=10)
 

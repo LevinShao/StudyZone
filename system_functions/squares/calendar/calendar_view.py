@@ -127,8 +127,8 @@ def show_calendar(app, year=None, month=None):
             tk.Button(grid, text=str(day), width=5, height=2, bg=bg_color, fg="white", command=lambda d=day: open_day(d)).grid(row=r+1, column=c, padx=3, pady=3)
 
     # Start reminder loop once
-    if not hasattr(app, "reminder_started"):
-        threading.Thread(target=reminder_loop, args=(app, app.current_user), daemon=True).start()
-        app.reminder_started = True
+    if not hasattr(app, "reminder_started"): # use hasattr to check if the attribute has been set
+        threading.Thread(target=reminder_loop, args=(app, app.current_user), daemon=True).start() # Start the reminder loop in a background thread
+        app.reminder_started = True # Set the attribute to True to prevent multiple loops
 
     bind_exit_menu(app)

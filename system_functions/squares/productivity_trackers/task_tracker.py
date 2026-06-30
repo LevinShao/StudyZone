@@ -39,6 +39,7 @@ def show_task_tracker(app):
 
     selected_priority = tk.StringVar(value="") # use stringvar to store the selected priority
     selected_priority.set("") # Set default priority to empty string
+
     priority_dropdown = ttk.Combobox(frame, textvariable=selected_priority, values=list(priority_options.keys()), state="readonly")
     priority_dropdown.pack(fill="x", pady=10)
 
@@ -119,6 +120,9 @@ def show_task_tracker(app):
 
     def add_task(): 
         # Add Task
+        if selected_priority.get() not in priority_options:
+            return
+
         task = {
             "name": task_entry.get(),
             "desc": desc_entry.get(),

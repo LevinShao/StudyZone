@@ -1,6 +1,5 @@
 import tkinter as tk                # GUI library for application interface
 from tkinter import messagebox      # For showing pop-up messages
-import json                         # Data storage
 import os                           # File handling
 import random                       # For random motivational messages
 from datetime import datetime       # Time detection
@@ -9,7 +8,7 @@ import pygame                       # Music player + playlist system (Using Pyga
 
 # INTEGRATION OF FUNCTIONALITY MODULES
 from system_functions.backend.ui_helpers import *                                      # Import everything from UI helpers module
-from system_functions.registration_login_systems import *                              # Registration & Login systems
+from db_files.account_manager import *                                                 # Registration & Login systems
 from system_functions.support import show_support_menu                                 # SIDEBAR 1: Support module (not currently developed)
 from system_functions.help import show_help_menu                                       # HELP MENU
 

@@ -16,23 +16,35 @@ def show_help_menu(self):
     tk.Label(frame, text="What is StudyZone?", font=("Segoe UI", 21, "bold"), bg=self.BG_CARD, fg=self.TEXT).place(relx=0.05, rely=0.2)
 
     # Body Text
-    lorem_text = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim"
-                    "ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                    " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim"
-                    "ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
+    txt = (
+            "StudyZone is an all-in-one productivity application designed to help students stay organised, focused and motivated. Instead of switching between multiple "
+            "applications, StudyZone brings essential study tools together into one desktop program.\n\n"
+
+            "The application includes productivity trackers, digital study tools, skill training exercises, wellbeing features and account management systems. Every "
+            "feature is designed to reduce distractions, make studying more efficient, and make yourself better than ever, "
+            "whether you are preparing for exams, completing homework or simply organising your daily routine."
+            )
     
     # Automatically wraps text into a block
-    tk.Label(frame, text=lorem_text, font=("Segoe UI", 12), bg=self.BG_CARD, fg=self.TEXT, justify="left", wraplength=1700).place(relx=0.05, rely=0.26)
+    tk.Label(frame, text=txt, font=("Segoe UI", 12), bg=self.BG_CARD, fg=self.TEXT, justify="left", wraplength=1700).place(relx=0.05, rely=0.26)
 
     tk.Label(frame, text="How does this app work?", font=("Segoe UI", 21, "bold"), bg=self.BG_CARD, fg=self.TEXT).place(relx=0.05, rely=0.4)
 
     # Body Text
-    lorem_text2 = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim"
-                    "ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                    " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim"
-                    "ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
+    txt2 = (
+            "Once you create an account and log in, your personal data is stored locally on your computer and automatically loaded each time you use the application. "
+            "StudyZone remembers your tasks, notes, flashcards, goals, habits and other information so you can continue where you left off.\n\n"
+
+            "Navigate through the application using the coloured squares and circular buttons on the main dashboard. Each section focuses on a different aspect of "
+            "productivity, including study tools, habit building, wellbeing, creativity and skill development. Most screens can be exited quickly by pressing the "
+            "Escape key or using the back button in the top-left corner."
+            )
     
     # Automatically wraps text into a block
-    tk.Label(frame, text=lorem_text2, font=("Segoe UI", 12), bg=self.BG_CARD, fg=self.TEXT, justify="left", wraplength=1700).place(relx=0.05, rely=0.46)
+    tk.Label(frame, text=txt2, font=("Segoe UI", 12), bg=self.BG_CARD, fg=self.TEXT, justify="left", wraplength=1700).place(relx=0.05, rely=0.46)
+
+    okbtn = create_small_button(frame, "Got it, thanks!", self.show_home, self, primary=True)
+    okbtn.config(width=40, height=5)
+    okbtn.place(relx=0.5, rely=0.95, anchor="s")
     
     bind_exit_home(self)

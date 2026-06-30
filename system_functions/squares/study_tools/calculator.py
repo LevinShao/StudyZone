@@ -1,4 +1,3 @@
-# Special thanks to geeksforgeeks.org for providing the tutorial for this function
 import tkinter as tk
 from system_functions.backend.ui_helpers import bind_exit_inner_menu
 
@@ -11,10 +10,10 @@ def show_calculator(app):
     container = tk.Frame(app.root, bg=app.BG_MAIN)
     container.pack(fill="both", expand=True)
 
-    frame = tk.Frame(container, bg=app.BG_frame, padx=30, pady=30)
+    frame = tk.Frame(container, bg=app.BG_CARD, padx=30, pady=30)
     frame.pack(expand=True)
 
-    tk.Label(frame, text="Calculator", font=("Segoe UI", 24, "bold"), bg=app.BG_frame, fg=app.TEXT).grid(row=0, column=0, columnspan=4, pady=(0, 20))
+    tk.Label(frame, text="Calculator", font=("Segoe UI", 24, "bold"), bg=app.BG_CARD, fg=app.TEXT).grid(row=0, column=0, columnspan=4, pady=(0, 20))
     entry = tk.Entry(frame, textvariable=display, font=("Segoe UI", 14), justify="right")
     entry.grid(row=1, column=0, columnspan=4, sticky="ew", pady=(0, 15), ipady=8)
 

@@ -98,6 +98,7 @@ def art(app):
     # Clear the entire canvas
     def clear_canvas():
         canvas.delete("all")
+        canvas.config(bg="white")
 
     # Change Pen Color
     def change_fg():
@@ -139,11 +140,10 @@ def art(app):
             return
 
         # Get canvas position on screen
-        x = canvas.winfo_rootx()
-        y = canvas.winfo_rooty()
-
-        x1 = x + canvas.winfo_width()
-        y1 = y + canvas.winfo_height()
+        x = canvas.winfo_rootx() # leftmost point of canvas
+        y = canvas.winfo_rooty() # topmost point of canvas
+        x1 = x + canvas.winfo_width() # rightmost point of canvas
+        y1 = y + canvas.winfo_height() # bottommost point of canvas
 
         # Screenshot only canvas area
         ImageGrab.grab().crop((x, y, x1, y1)).save(file_path)
@@ -158,24 +158,13 @@ def art(app):
     redo_btn = tk.Label(undo_redo_frame, text="↷ Redo", bg="#374151", fg="white", font=("Segoe UI", 10, "bold"), width=10, height=1, cursor="hand2")
     redo_btn.pack(side="left", padx=5)
 
-    # Main Hover Effects
-    def undo_hover_on(e): 
-        undo_btn.config(bg="#4b5563")
-        
-    def undo_hover_off(e):
-        undo_btn.config(bg="#374151")
-
-    def redo_hover_on(e): 
-        redo_btn.config(bg="#4b5563")
-
-    def redo_hover_off(e): 
-        redo_btn.config(bg="#374151")
-
-    undo_btn.bind("<Enter>", undo_hover_on)
-    undo_btn.bind("<Leave>", undo_hover_off)
+    # Bindings for hover effects
+    undo_btn.bind("<Enter>", lambda e: undo_btn.config(bg="#4b5563"))
+    undo_btn.bind("<Leave>", lambda e: undo_btn.config(bg="#374151"))
     undo_btn.bind("<Button-1>", lambda e: undo())
-    redo_btn.bind("<Enter>", redo_hover_on)
-    redo_btn.bind("<Leave>", redo_hover_off)
+
+    redo_btn.bind("<Enter>", lambda e: redo_btn.config(bg="#4b5563"))
+    redo_btn.bind("<Leave>", lambda e: redo_btn.config(bg="#374151"))
     redo_btn.bind("<Button-1>", lambda e: redo())
 
     # Pen Width Slider

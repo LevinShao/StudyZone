@@ -24,7 +24,7 @@ def show_flashcards(app):
     question_entry, _ = app.create_field(frame, "Question")
     answer_entry, _ = app.create_field(frame, "Answer")
 
-    # Listbox for flashcard display
+    # List box for flashcard display
     listbox = tk.Listbox(frame, width=60, height=10)
     listbox.pack(pady=20)
 
@@ -35,6 +35,12 @@ def show_flashcards(app):
         for card in flashcards:
             # Only show the question in the list box, answer is revealed in review or edit popup
             listbox.insert(tk.END, card["question"])
+
+        # Enable/disable the review button depending on whether flashcards exist
+        if len(flashcards) == 0:
+            review_btn.config(state="disabled")
+        else:
+            review_btn.config(state="normal")
 
     # Add Flashcard
     def add_flashcard():
@@ -127,7 +133,8 @@ def show_flashcards(app):
 
     # Row 2
     create_small_button(btn_frame, "Delete Flashcard", delete_flashcard, app, primary=True).grid(row=1, column=0, padx=15, pady=10)
-    create_small_button(btn_frame, "Review Flashcards", show_review_menu, app, primary=False).grid(row=1, column=1, padx=15, pady=10)
+    review_btn = create_small_button(btn_frame, "Review Flashcards", show_review_menu, app, primary=False)
+    review_btn.grid(row=1, column=1, padx=15, pady=10)
 
     # EXIT BUTTON FUNCTIONS
     def exit_btn():
